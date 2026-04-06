@@ -10,18 +10,21 @@ import { motion, AnimatePresence } from 'motion/react';
 
 // --- Components ---
 
-const Logo = () => (
+const Logo = React.memo(() => (
   <div className="flex items-center gap-2">
     <img 
       src="https://bubbles.gabrielxavier.online/BUBBLES.svg" 
       alt="Bubbles® Logo" 
       className="h-8 md:h-10 w-auto brightness-0 invert"
       referrerPolicy="no-referrer"
+      fetchpriority="high"
+      width="150"
+      height="40"
     />
   </div>
-);
+));
 
-const CarouselWrapper = ({ children, carouselRef, showOnDesktop = false }: { children: React.ReactNode, carouselRef: React.RefObject<HTMLDivElement | null>, showOnDesktop?: boolean }) => {
+const CarouselWrapper = React.memo(({ children, carouselRef, showOnDesktop = false }: { children: React.ReactNode, carouselRef: React.RefObject<HTMLDivElement | null>, showOnDesktop?: boolean }) => {
   const scroll = (direction: 'left' | 'right') => {
     if (carouselRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
@@ -62,9 +65,9 @@ const CarouselWrapper = ({ children, carouselRef, showOnDesktop = false }: { chi
       </div>
     </div>
   );
-};
+});
 
-const StickyBar = ({ onOpenForm, heroButtonRef }: { onOpenForm: () => void, heroButtonRef: React.RefObject<HTMLButtonElement | null> }) => {
+const StickyBar = React.memo(({ onOpenForm, heroButtonRef }: { onOpenForm: () => void, heroButtonRef: React.RefObject<HTMLButtonElement | null> }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -117,9 +120,9 @@ const StickyBar = ({ onOpenForm, heroButtonRef }: { onOpenForm: () => void, hero
       )}
     </AnimatePresence>
   );
-};
+});
 
-const BenefitsMarquee = () => {
+const BenefitsMarquee = React.memo(() => {
   const benefits = [
     "Margens de Lucro Superiores", "Suporte de Marketing 360º", "Logística Ágil", 
     "Treinamento Técnico", "Produtos Veganos", 
@@ -175,9 +178,9 @@ const BenefitsMarquee = () => {
       `}</style>
     </div>
   );
-};
+});
 
-const HeroCarousel = () => {
+const HeroCarousel = React.memo(() => {
   const [index, setIndex] = useState(0);
   const lines = [
     { name: "Linha PRO", desc: "Máximo rendimento para profissionais", img: "https://bubbles.gabrielxavier.online/capa_linha-pro.jpg" },
@@ -209,6 +212,8 @@ const HeroCarousel = () => {
             alt={lines[index].name}
             className="w-full h-full object-cover rounded-[40px] transition-all duration-700"
             referrerPolicy="no-referrer"
+            fetchpriority={index === 0 ? "high" : "auto"}
+            loading={index === 0 ? "eager" : "lazy"}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-transparent opacity-60" />
           <div className="absolute bottom-10 left-10 right-10 z-20">
@@ -271,7 +276,7 @@ const HeroCarousel = () => {
       </div>
     </div>
   );
-};
+});
 
 const ExitIntentPopup = ({ isOpen, onClose, onOpenForm }: { isOpen: boolean, onClose: () => void, onOpenForm: () => void }) => {
   if (!isOpen) return null;
@@ -615,6 +620,10 @@ export default function DistribuidorGabriel() {
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
   const heroButtonRef = useRef<HTMLButtonElement>(null);
 
+  const handleOpenForm = React.useCallback(() => {
+    setIsFormOpen(true);
+  }, []);
+
   const statsCarouselRef = useRef<HTMLDivElement>(null);
   const profitabilityCarouselRef = useRef<HTMLDivElement>(null);
   const testimonialsCarouselRef = useRef<HTMLDivElement>(null);
@@ -760,7 +769,7 @@ export default function DistribuidorGabriel() {
                       y: [0, -4, 0],
                       transition: { duration: 4, repeat: Infinity, ease: "easeInOut" }
                     }}
-                    onClick={() => setIsFormOpen(true)}
+                    onClick={handleOpenForm}
                     className="bg-[#F4CDD4] text-[#080808] px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:shadow-[0_0_30px_rgba(244,205,212,0.4)] transition-all flex items-center justify-center gap-2 group flex-1 w-full md:w-auto text-center leading-tight"
                   >
                     Me Candidatar Agora <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform hidden md:block" />
@@ -769,7 +778,7 @@ export default function DistribuidorGabriel() {
                   <div className="flex -space-x-3">
                     {[1,2,3].map(i => (
                       <div key={i} className="w-8 h-8 rounded-full border-2 border-[#080808] bg-gray-800 overflow-hidden shadow-lg">
-                        <img src={`https://i.pravatar.cc/100?u=${i+10}`} alt="User" referrerPolicy="no-referrer" />
+                        <img src={`https://i.pravatar.cc/100?u=${i+10}`} alt="User" referrerPolicy="no-referrer" loading="lazy" width="32" height="32" />
                       </div>
                     ))}
                   </div>
@@ -807,6 +816,7 @@ export default function DistribuidorGabriel() {
             alt="" 
             className="w-full h-full object-contain"
             referrerPolicy="no-referrer"
+            loading="lazy"
           />
         </div>
 
@@ -899,6 +909,9 @@ export default function DistribuidorGabriel() {
                     alt={`Linha ${line.name}`} 
                     className="h-full w-auto object-contain brightness-0 invert transition-transform duration-500"
                     referrerPolicy="no-referrer"
+                    loading="lazy"
+                    width="120"
+                    height="120"
                   />
                 </div>
                 
@@ -1029,6 +1042,8 @@ export default function DistribuidorGabriel() {
           muted 
           loop 
           playsInline 
+          preload="none"
+          poster="https://bubbles.gabrielxavier.online/capa_linha-pro.jpg"
           className="absolute inset-0 w-full h-full object-cover z-0"
         >
           <source src="https://www.bubbles.com.br/cdn/shop/videos/c/vp/6fd9894dcddb47b5883886091db28520/6fd9894dcddb47b5883886091db28520.HD-1080p-7.2Mbps-45960585.mp4?v=0" type="video/mp4" />
@@ -1213,6 +1228,9 @@ export default function DistribuidorGabriel() {
                 alt="Bubbles® Logistics" 
                 className="rounded-[32px] w-full transition-all duration-700"
                 referrerPolicy="no-referrer"
+                loading="lazy"
+                width="600"
+                height="400"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-transparent opacity-40" />
               <div className="absolute bottom-6 left-6 right-6 md:bottom-10 md:left-10 md:right-10">
@@ -1274,6 +1292,9 @@ export default function DistribuidorGabriel() {
                       alt={testimonial.name}
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
+                      loading="lazy"
+                      width="48"
+                      height="48"
                     />
                   </div>
                   <div>
@@ -1370,9 +1391,9 @@ export default function DistribuidorGabriel() {
       <ExitIntentPopup 
         isOpen={isExitPopupOpen} 
         onClose={() => setIsExitPopupOpen(false)} 
-        onOpenForm={() => setIsFormOpen(true)} 
+        onOpenForm={handleOpenForm} 
       />
-      <StickyBar onOpenForm={() => setIsFormOpen(true)} heroButtonRef={heroButtonRef} />
+      <StickyBar onOpenForm={handleOpenForm} heroButtonRef={heroButtonRef} />
     </div>
   );
 }

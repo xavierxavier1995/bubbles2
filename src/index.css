@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -70,7 +70,7 @@
   --announcement-height: 38px;
 
   /* ── TIPOGRAFIA ── */
-  --font-figtree: "Figtree", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
 
   /* ── RADIUS ── */
   --radius-sm: 4px;
@@ -96,7 +96,7 @@
 
 @layer base {
   body {
-    @apply font-figtree text-primary bg-white;
+    @apply font-poppins text-primary bg-white;
   }
 
   h1, h2, h3, h4, h5, h6 {
