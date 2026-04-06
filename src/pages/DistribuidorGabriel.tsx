@@ -3,7 +3,8 @@ import {
   TrendingUp, DollarSign, Truck, Package, ChevronDown, CheckCircle, CheckCircle2, 
   ArrowRight, Star, HelpCircle, Instagram, Youtube, MessageCircle, Phone, Mail,
   Shield, Zap, BarChart3, Users, Award, Lock, X, ChevronRight, Calculator,
-  BookOpen, GraduationCap, Sparkles, Clock, Droplets, Wind, Beaker, Leaf, Eye, Heart, Globe
+  BookOpen, GraduationCap, Sparkles, Clock, Droplets, Wind, Beaker, Leaf, Eye, Heart, Globe,
+  ChevronLeft
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -19,6 +20,49 @@ const Logo = () => (
     />
   </div>
 );
+
+const CarouselWrapper = ({ children, carouselRef, showOnDesktop = false }: { children: React.ReactNode, carouselRef: React.RefObject<HTMLDivElement | null>, showOnDesktop?: boolean }) => {
+  const scroll = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+      const scrollStep = clientWidth > 768 ? 400 : 300;
+      
+      if (direction === 'right') {
+        if (scrollLeft + clientWidth >= scrollWidth - 10) {
+          carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          carouselRef.current.scrollBy({ left: scrollStep, behavior: 'smooth' });
+        }
+      } else {
+        if (scrollLeft <= 10) {
+          carouselRef.current.scrollTo({ left: scrollWidth, behavior: 'smooth' });
+        } else {
+          carouselRef.current.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+        }
+      }
+    }
+  };
+
+  return (
+    <div className="relative group/carousel">
+      {children}
+      <div className={`absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none z-20 ${showOnDesktop ? '' : 'md:hidden'} opacity-100 transition-opacity px-2`}>
+        <button 
+          onClick={() => scroll('left')}
+          className="w-10 h-10 rounded-full bg-[#080808]/80 backdrop-blur-md border border-white/20 flex items-center justify-center text-white pointer-events-auto hover:bg-[#F4CDD4] hover:text-[#080808] transition-colors shadow-lg -ml-2 md:-ml-5"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        <button 
+          onClick={() => scroll('right')}
+          className="w-10 h-10 rounded-full bg-[#080808]/80 backdrop-blur-md border border-white/20 flex items-center justify-center text-white pointer-events-auto hover:bg-[#F4CDD4] hover:text-[#080808] transition-colors shadow-lg -mr-2 md:-mr-5"
+        >
+          <ChevronRight size={24} />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const StickyBar = ({ onOpenForm, heroButtonRef }: { onOpenForm: () => void, heroButtonRef: React.RefObject<HTMLButtonElement | null> }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -201,13 +245,29 @@ const HeroCarousel = () => {
       </AnimatePresence>
       
       {/* Progress Indicators */}
-      <div className="absolute top-10 right-10 flex gap-2">
+      <div className="absolute top-10 right-10 flex gap-2 z-30">
         {lines.map((_, i) => (
           <div 
             key={i} 
             className={`h-1 rounded-full transition-all duration-500 ${i === index ? 'w-8 bg-[#F4CDD4]' : 'w-2 bg-white/20'}`} 
           />
         ))}
+      </div>
+
+      {/* Navigation Arrows */}
+      <div className="absolute top-1/2 -translate-y-1/2 left-4 right-4 flex justify-between z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <button 
+          onClick={() => setIndex((prev) => (prev - 1 + lines.length) % lines.length)}
+          className="w-10 h-10 rounded-full bg-[#080808]/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-[#F4CDD4] hover:text-[#080808] transition-colors shadow-lg"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        <button 
+          onClick={() => setIndex((prev) => (prev + 1) % lines.length)}
+          className="w-10 h-10 rounded-full bg-[#080808]/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-[#F4CDD4] hover:text-[#080808] transition-colors shadow-lg"
+        >
+          <ChevronRight size={24} />
+        </button>
       </div>
     </div>
   );
@@ -694,7 +754,7 @@ export default function DistribuidorGabriel() {
                       transition: { duration: 4, repeat: Infinity, ease: "easeInOut" }
                     }}
                     onClick={() => setIsFormOpen(true)}
-                    className="bg-[#F4CDD4] text-[#080808] px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:shadow-[0_0_30px_rgba(244,205,212,0.4)] transition-all flex items-center justify-center gap-2 group flex-1 max-w-[180px] md:max-w-none text-center leading-tight mx-auto md:mx-0"
+                    className="bg-[#F4CDD4] text-[#080808] px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:shadow-[0_0_30px_rgba(244,205,212,0.4)] transition-all flex items-center justify-center gap-2 group flex-1 w-full md:w-auto text-center leading-tight"
                   >
                     Me Candidatar Agora <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform hidden md:block" />
                   </motion.button>
@@ -746,18 +806,20 @@ export default function DistribuidorGabriel() {
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Nosso Mix</span>
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
-              Uma Linha para cada <span className="text-[#F4CDD4]">Perfil de Cliente</span>
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight uppercase break-words">
+              Uma Linha para cada <br className="block md:hidden" />
+              <span className="text-[#F4CDD4]">Perfil de Cliente</span>
             </h2>
             <p className="text-white/60 text-lg max-w-3xl mx-auto leading-relaxed">
               Do groomer de elite ao pet shop em expansão, a Bubbles® oferece soluções que combinam alta performance técnica com rentabilidade imbatível.
             </p>
           </div>
 
-          <div className="flex gap-6 overflow-x-auto pt-6 pb-12 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4" ref={productLinesCarouselRef}>
-            {[
-              {
-                name: "PRO",
+          <CarouselWrapper carouselRef={productLinesCarouselRef}>
+            <div className="flex gap-6 overflow-x-auto pt-6 pb-12 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4" ref={productLinesCarouselRef}>
+              {[
+                {
+                  name: "PRO",
                 target: "Groomers Avançados",
                 pos: "Alta performance, resultado técnico superior.",
                 visual: "Embalagem preta, tom sério e técnico.",
@@ -879,13 +941,14 @@ export default function DistribuidorGabriel() {
                   </p>
                 </div>
                 
-                <div 
-                  className="absolute bottom-0 left-0 w-full h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{ backgroundColor: line.accent }}
-                />
-              </motion.div>
-            ))}
-          </div>
+                  <div 
+                    className="absolute bottom-0 left-0 w-full h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{ backgroundColor: line.accent }}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </CarouselWrapper>
         </div>
       </section>
 
@@ -895,9 +958,10 @@ export default function DistribuidorGabriel() {
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
             <div className="order-2 lg:order-1">
-              <div className="flex lg:grid lg:grid-cols-2 gap-4 lg:gap-6 overflow-x-auto lg:overflow-visible pb-8 lg:pb-0 snap-x snap-mandatory no-scrollbar -mx-6 px-6 lg:mx-0 lg:px-0" ref={profitabilityCarouselRef}>
-                {[
-                  { icon: BarChart3, title: "Ganhos Exponenciais", desc: "Estrutura de preços desenhada para o seu crescimento." },
+              <CarouselWrapper carouselRef={profitabilityCarouselRef}>
+                <div className="flex lg:grid lg:grid-cols-2 gap-4 lg:gap-6 overflow-x-auto lg:overflow-visible pb-8 lg:pb-0 snap-x snap-mandatory no-scrollbar -mx-6 px-6 lg:mx-0 lg:px-0" ref={profitabilityCarouselRef}>
+                  {[
+                    { icon: BarChart3, title: "Ganhos Exponenciais", desc: "Estrutura de preços desenhada para o seu crescimento." },
                   { icon: Zap, title: "Giro de Estoque", desc: "Produtos de alta recorrência e aceitação imediata." },
                   { icon: Shield, title: "Segurança de Margem", desc: "Política rígida que protege o seu lucro na ponta." },
                   { icon: Users, title: "Fidelização", desc: "O profissional que usa Bubbles® não aceita substitutos." }
@@ -918,11 +982,12 @@ export default function DistribuidorGabriel() {
                   </motion.div>
                 ))}
               </div>
+              </CarouselWrapper>
             </div>
             <div className="order-1 lg:order-2">
               <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Ganhos Exponenciais</span>
-              <h2 className="text-xl sm:text-2xl md:text-4xl font-black text-white mb-6 md:mb-8 leading-tight tracking-normal md:tracking-tight break-words">
-                Segurança de Margem e <br className="hidden md:block" />
+              <h2 className="text-2xl md:text-4xl font-black text-white mb-6 md:mb-8 leading-tight tracking-tight uppercase break-words">
+                Segurança de Margem <br className="block md:hidden" />e <br className="hidden md:block" />
                 <span className="text-[#F4CDD4]">Rentabilidade Real.</span>
               </h2>
               <p className="text-white/60 text-sm md:text-base mb-8 leading-relaxed">
@@ -996,9 +1061,10 @@ export default function DistribuidorGabriel() {
             </motion.div>
           </div>
 
-          <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-10 px-10 lg:mx-0 lg:px-0 lg:grid lg:grid-cols-5 lg:gap-2" ref={statsCarouselRef}>
-            {[
-              { label: "Tempo de Mercado", val: "+7 Anos", icon: Clock, desc: "Pioneirismo e Inovação" },
+          <CarouselWrapper carouselRef={statsCarouselRef}>
+            <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-10 px-10 lg:mx-0 lg:px-0 lg:grid lg:grid-cols-5 lg:gap-2" ref={statsCarouselRef}>
+              {[
+                { label: "Tempo de Mercado", val: "+7 Anos", icon: Clock, desc: "Pioneirismo e Inovação" },
               { label: "NPS e Satisfação", val: "4.9/5.0", icon: Star, desc: "Aprovação Máxima" },
               { label: "Base de Groomers", val: "+5.000", icon: Users, desc: "Especialistas de Elite" },
               { label: "Clientes Ativos", val: "+20.000", icon: Heart, desc: "Tutores Apaixonados" },
@@ -1020,7 +1086,8 @@ export default function DistribuidorGabriel() {
                 <p className="text-white/40 text-[6px] font-bold uppercase tracking-tighter">{stat.desc}</p>
               </motion.div>
             ))}
-          </div>
+            </div>
+          </CarouselWrapper>
         </div>
       </section>
 
@@ -1029,7 +1096,7 @@ export default function DistribuidorGabriel() {
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
         <div className="max-w-7xl mx-auto text-center mb-12">
           <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Pertencimento e Elite</span>
-          <h2 className="text-3xl md:text-4xl font-black text-white mb-8 tracking-tight">Faça Parte da <span className="bg-[#F4CDD4] text-[#080808] px-2">COMUNIDADE</span> que <br /> Lidera o Futuro do Mercado Pet.</h2>
+          <h2 className="text-3xl md:text-4xl font-black text-white mb-8 tracking-tight uppercase break-words">Faça Parte da <br className="block md:hidden" /><span className="bg-[#F4CDD4] text-[#080808] px-2">COMUNIDADE</span> que <br /> Lidera o Futuro do Mercado Pet.</h2>
           <p className="text-white/60 text-lg max-w-3xl mx-auto leading-relaxed">
             Ser um distribuidor Bubbles® é pertencer a um <span className="bg-[#F4CDD4] text-[#080808] px-1 py-1 font-bold">ecossistema</span> de elite que dita as tendências do setor. 
             Não entregamos apenas galões; entregamos <span className="text-white font-bold">posicionamento e autoridade</span>.
@@ -1089,7 +1156,7 @@ export default function DistribuidorGabriel() {
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-24 items-center">
           <div>
             <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Excelência Logística</span>
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-8 leading-tight tracking-tight">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-8 leading-tight tracking-tight uppercase break-words">
               Suporte Total: Do Pedido à <br />
               <span className="text-[#F4CDD4]">Satisfação do seu Cliente.</span>
             </h2>
@@ -1156,17 +1223,18 @@ export default function DistribuidorGabriel() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 md:mb-16">
             <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Vozes do Sucesso</span>
-            <h2 className="text-2xl md:text-4xl font-black text-white mb-6 tracking-tight">
+            <h2 className="text-2xl md:text-4xl font-black text-white mb-6 tracking-tight uppercase break-words">
               O que dizem nossos <span className="text-[#F4CDD4]">Distribuidores</span>
             </h2>
           </div>
 
-          <div 
-            ref={testimonialsCarouselRef}
-            className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0"
-          >
-            {[
-              { name: "Ricardo Silva Santos", region: "São Paulo/SP", gender: "male", text: "A Bubbles mudou o patamar do meu negócio.. aceitação dos groomers é imediata e a recompra é garantida, vale muito a pena o investimento" },
+          <CarouselWrapper carouselRef={testimonialsCarouselRef} showOnDesktop={true}>
+            <div 
+              ref={testimonialsCarouselRef}
+              className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0"
+            >
+              {[
+                { name: "Ricardo Silva Santos", region: "São Paulo/SP", gender: "male", text: "A Bubbles mudou o patamar do meu negócio.. aceitação dos groomers é imediata e a recompra é garantida, vale muito a pena o investimento" },
               { name: "Ana Oliveira Souza", region: "Curitiba/PR", gender: "female", text: "Suporte logistico impecavel!! nunca fico sem estoque e a margem de lucro permite escala real no faturamento." },
               { name: "Marcos Santos Pereira", region: "Belo Horizonte/MG", gender: "male", text: "Trabalhar com uma marca que preza pela ética e qualidade facilita muito a abertura de novas portas... os clientes ja conhecem e confiam" },
               { name: "Juliana Costa Lima", region: "Salvador/BA", gender: "female", text: "Rentabilidade da linha PRO é o diferencial, Meus clientes economizam e eu lucro mais" },
@@ -1213,7 +1281,8 @@ export default function DistribuidorGabriel() {
                 </div>
               </motion.div>
             ))}
-          </div>
+            </div>
+          </CarouselWrapper>
         </div>
       </section>
 
