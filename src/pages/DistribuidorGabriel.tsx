@@ -693,7 +693,14 @@ export default function DistribuidorGabriel() {
       if ((import.meta as any).env.DEV) return;
       
       if (e.clientY <= 0) {
-        setIsExitPopupOpen(true);
+        const lastShown = localStorage.getItem('lastExitPopupTime');
+        const now = Date.now();
+        const fiveMinutes = 5 * 60 * 1000;
+        
+        if (!lastShown || now - parseInt(lastShown) > fiveMinutes) {
+          setIsExitPopupOpen(true);
+          localStorage.setItem('lastExitPopupTime', now.toString());
+        }
       }
     };
     document.addEventListener('mouseleave', handleMouseLeave);
