@@ -1,0 +1,217 @@
+      {/* Product Lines Section */}
+      <section id="linhas" className="py-20 md:py-32 px-6 md:px-10 bg-[#080808] relative overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24 gap-8">
+            <div className="max-w-2xl">
+              <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Portfólio de Alta Performance</span>
+              <h2 className="text-3xl md:text-5xl font-black text-white mb-8 leading-tight tracking-tight">
+                Soluções que <span className="text-[#F4CDD4]">Dominam</span> <br />
+                o Mercado de Estética Pet.
+              </h2>
+              <p className="text-white/60 text-lg leading-relaxed font-medium">
+                Nossas linhas são desenvolvidas com ativos de <span className="text-white font-bold">alta tecnologia</span>, garantindo resultados imediatos que fidelizam o groomer e o tutor.
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <div className="text-right">
+                <p className="text-white font-black text-2xl md:text-3xl tracking-tighter">+50</p>
+                <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">SKUs Ativos</p>
+              </div>
+              <div className="w-px h-12 bg-white/10" />
+              <div className="text-right">
+                <p className="text-white font-black text-2xl md:text-3xl tracking-tighter">100%</p>
+                <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Vegano</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-6 overflow-x-auto pb-12 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0 lg:grid lg:grid-cols-4 lg:gap-6">
+            {[
+              { 
+                name: "PRO", 
+                target: "Uso Profissional", 
+                pos: "Máximo rendimento e performance técnica.", 
+                visual: "Galões de 5L com alta diluição.", 
+                accent: "#F4CDD4",
+                logo: "https://bubbles.gabrielxavier.online/PRO.svg",
+                highlightLabel: "Diluição",
+                highlightValue: "Até 1:10 - O melhor custo por banho.",
+                quote: "A base de faturamento de qualquer centro de estética pet.",
+              },
+              { 
+                name: "ESSENTIAL", 
+                target: "Uso Diário", 
+                pos: "Qualidade Bubbles® com custo otimizado.", 
+                visual: "Fragrâncias marcantes e limpeza profunda.", 
+                accent: "#FFFFFF",
+                logo: "https://bubbles.gabrielxavier.online/ESSENTIAL.svg",
+                highlightLabel: "Recorrência",
+                highlightValue: "Alta rotatividade e aceitação imediata.",
+                quote: "A porta de entrada perfeita para novos clientes.",
+              },
+              { 
+                name: "XPERIENCE", 
+                target: "Premium", 
+                pos: "Experiência sensorial e luxo pet.", 
+                visual: "Embalagens sofisticadas e ativos nobres.", 
+                accent: "#E5C100",
+                logo: "https://bubbles.gabrielxavier.online/XPERIENCE.svg",
+                highlightLabel: "Diferencial",
+                highlightValue: "Fragrâncias exclusivas de longa duração.",
+                quote: "Para groomers que buscam elevar o ticket médio.",
+              },
+              { 
+                name: "COLLORA", 
+                target: "Tratamento", 
+                pos: "Tecnologia de cor e brilho intenso.", 
+                visual: "Pigmentação segura e revitalização.", 
+                accent: "#B066C6",
+                logo: "https://bubbles.gabrielxavier.online/COLLORA.svg",
+                highlightLabel: "Inovação",
+                highlightValue: "Transforme a pelagem em arte com segurança.",
+                quote: "Transforme a pelagem em arte com segurança comprovada",
+              }
+            ].map((line, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ 
+                  y: -10,
+                  borderColor: `${line.accent}44`,
+                  backgroundColor: `${line.accent}05`
+                }}
+                className="bg-[#121212] border border-white/5 border-t-4 p-8 rounded-[32px] flex flex-col h-full group transition-all duration-500 relative overflow-hidden min-w-[280px] md:min-w-0 snap-center"
+                style={{ borderTopColor: line.accent }}
+              >
+                <div 
+                  className="absolute top-0 right-0 w-32 h-32 blur-3xl rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-30 transition-opacity duration-500"
+                  style={{ backgroundColor: line.accent }}
+                />
+
+                <div className="mb-4 h-40 flex items-center justify-center relative">
+                  <img 
+                    src={line.logo} 
+                    alt={`Linha ${line.name}`} 
+                    className="h-full w-auto object-contain brightness-0 invert transition-transform duration-500"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                
+                <div className="mb-8">
+                  <span 
+                    className="text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border mb-4 inline-block"
+                    style={{ 
+                      borderColor: `${line.accent}33`,
+                      color: line.accent,
+                      backgroundColor: `${line.accent}11`
+                    }}
+                  >
+                    {line.target}
+                  </span>
+                  <h3 className="text-xl font-black text-white mb-3 tracking-tight">Linha {line.name}</h3>
+                  <p className="text-white/50 text-xs leading-relaxed font-medium">{line.pos}</p>
+                </div>
+
+                <div className="space-y-5 mb-10 flex-grow">
+                  <div className="flex items-start gap-4">
+                    <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center shrink-0 mt-0.5 border border-white/10">
+                      <Eye size={14} style={{ color: line.accent }} />
+                    </div>
+                    <div>
+                      <p className="text-white/40 text-[9px] font-black uppercase tracking-widest mb-0.5">Visual</p>
+                      <p className="text-white/80 text-[11px] leading-tight font-medium">{line.visual}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center shrink-0 mt-0.5 border border-white/10">
+                      <Droplets size={14} style={{ color: line.accent }} />
+                    </div>
+                    <div>
+                      <p className="text-white/40 text-[9px] font-black uppercase tracking-widest mb-0.5">{line.highlightLabel}</p>
+                      <p className="text-white/80 text-[11px] leading-tight font-medium">{line.highlightValue}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-8 border-t border-white/5 mt-auto">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-1 h-4 rounded-full" style={{ backgroundColor: line.accent }} />
+                    <p className="text-white/40 text-[9px] font-black uppercase tracking-widest">Manifesto</p>
+                  </div>
+                  <p className="text-white font-black italic text-xs leading-tight tracking-tight">
+                    "{line.quote}"
+                  </p>
+                </div>
+                
+                <div 
+                  className="absolute bottom-0 left-0 w-full h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{ backgroundColor: line.accent }}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Argumentation 1: Profitability */}
+      <section id="rentabilidade" className="py-16 md:py-20 px-6 md:px-10 border-t border-white/5 relative">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#F4CDD4]/5 blur-[150px] rounded-full pointer-events-none" />
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+            <div className="order-2 lg:order-1">
+              <div className="flex lg:grid lg:grid-cols-2 gap-4 lg:gap-6 overflow-x-auto lg:overflow-visible pb-8 lg:pb-0 snap-x snap-mandatory no-scrollbar -mx-6 px-6 lg:mx-0 lg:px-0" ref={profitabilityCarouselRef}>
+                {[
+                  { icon: BarChart3, title: "Ganhos Exponenciais", desc: "Estrutura de preços desenhada para o seu crescimento." },
+                  { icon: Zap, title: "Giro de Estoque", desc: "Produtos de alta recorrência e aceitação imediata." },
+                  { icon: Shield, title: "Segurança de Margem", desc: "Política rígida que protege o seu lucro na ponta." },
+                  { icon: Users, title: "Fidelização", desc: "O profissional que usa Bubbles® não aceita substitutos." }
+                ].map((item, idx) => (
+                  <motion.div 
+                    key={idx} 
+                    whileHover={{ 
+                      y: -10, 
+                      borderColor: 'rgba(244,205,212,0.6)',
+                      boxShadow: "0 0 40px rgba(244,205,212,0.15)"
+                    }}
+                    className="bg-[#121212] border border-white/5 p-6 lg:p-8 rounded-3xl transition-all group shadow-lg relative overflow-hidden min-w-[260px] lg:min-w-0 snap-center"
+                  >
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#F4CDD4]/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-[#F4CDD4]/10 transition-colors" />
+                    <item.icon size={28} className="text-[#F4CDD4] mb-6 group-hover:scale-110 transition-transform drop-shadow-[0_0_8px_rgba(244,205,212,0.3)]" />
+                    <h4 className="text-base font-black text-white mb-2 tracking-tight uppercase">{item.title}</h4>
+                    <p className="text-white/40 text-[11px] leading-relaxed font-medium">{item.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+            <div className="order-1 lg:order-2">
+              <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Ganhos Exponenciais</span>
+              <h2 className="text-xl sm:text-2xl md:text-4xl font-black text-white mb-6 md:mb-8 leading-tight tracking-normal md:tracking-tight break-words">
+                Segurança de Margem e <br className="hidden md:block" />
+                <span className="text-[#F4CDD4]">Rentabilidade Real.</span>
+              </h2>
+              <p className="text-white/60 text-sm md:text-base mb-8 leading-relaxed">
+                Nossa Linha PRO oferece diluição de até 1:10, garantindo o menor custo por banho do mercado. 
+                Para o distribuidor, isso se traduz em um <span className="text-white font-bold">Potencial de Ganho de até 50%</span> e recompra garantida.
+              </p>
+              <ul className="space-y-3 md:space-y-4">
+                {[
+                  "Margens de lucro estruturadas para escala",
+                  "Payback do investimento inicial em tempo recorde",
+                  "Bonificações por metas atingidas*",
+                  "Apoio em feiras e eventos regionais"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-white/80 font-bold text-sm">
+                    <CheckCircle size={16} className="text-[#F4CDD4]" /> {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ROI Calculator Section */}
+      <ROICalculator />
