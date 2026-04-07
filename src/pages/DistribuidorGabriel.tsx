@@ -48,6 +48,8 @@ const CarouselWrapper = React.memo(({ children, carouselRef, showOnDesktop = fal
 
   return (
     <div className="relative group/carousel">
+      <div className="absolute top-0 bottom-0 -left-6 md:left-0 w-12 md:w-32 bg-gradient-to-r from-[#080808] via-[#080808]/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute top-0 bottom-0 -right-6 md:right-0 w-12 md:w-32 bg-gradient-to-l from-[#080808] via-[#080808]/80 to-transparent z-10 pointer-events-none" />
       {children}
       <div className={`absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none z-20 ${showOnDesktop ? '' : 'md:hidden'} opacity-100 transition-opacity px-2`}>
         <button 
@@ -110,7 +112,7 @@ const StickyBar = React.memo(({ onOpenForm, heroButtonRef }: { onOpenForm: () =>
               onClick={onOpenForm}
               className="bg-[#F4CDD4] text-[#080808] px-6 md:px-10 py-2 md:py-2.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest shadow-[0_0_10px_rgba(244,205,212,0.2)] transition-all relative overflow-hidden group shrink-0 max-w-[140px] md:max-w-none text-center leading-tight"
             >
-              <span className="relative z-10">Me Candidatar Agora</span>
+              <span className="relative z-10">Quero ser um distribuidor</span>
               <motion.div 
                 className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"
                 initial={false}
@@ -183,10 +185,10 @@ const BenefitsMarquee = React.memo(() => {
 const HeroCarousel = React.memo(() => {
   const [index, setIndex] = useState(0);
   const lines = [
-    { name: "Linha PRO", desc: "Máximo rendimento para profissionais", img: "https://bubbles.gabrielxavier.online/capa_linha-pro.jpg" },
-    { name: "Essential", desc: "O melhor custo-benefício do mercado", img: "https://bubbles.gabrielxavier.online/capa_linha-essential.jpg" },
-    { name: "Xperience", desc: "Sensorial premium e fragrâncias únicas", img: "https://bubbles.gabrielxavier.online/capa_linha-xperience.jpg" },
-    { name: "Collora", desc: "Tratamento de cor e brilho intenso", img: "https://bubbles.gabrielxavier.online/capa_kit-collora.jpg" }
+    { name: "Linha PRO", desc: "Máximo rendimento para profissionais", imgDesktop: "https://bubbles.gabrielxavier.online/bubbles-linha-pro-desktop.webp", imgMobile: "https://bubbles.gabrielxavier.online/bubbles-linha-pro-mobile.webp" },
+    { name: "Essential", desc: "O melhor custo-benefício do mercado", imgDesktop: "https://bubbles.gabrielxavier.online/bubbles-linha-essential-desktop.webp", imgMobile: "https://bubbles.gabrielxavier.online/bubbles-linha-essential-mobile.webp" },
+    { name: "Xperience", desc: "Sensorial premium e fragrâncias únicas", imgDesktop: "https://bubbles.gabrielxavier.online/bubbles-linha-xperience-desktop.webp", imgMobile: "https://bubbles.gabrielxavier.online/bubbles-linha-xperience-mobile.webp" },
+    { name: "Collora", desc: "Tratamento de cor e brilho intenso", imgDesktop: "https://bubbles.gabrielxavier.online/bubbles-kit-collora-desktop.webp", imgMobile: "https://bubbles.gabrielxavier.online/bubbles-kit-collora-mobile.webp" }
   ];
 
   useEffect(() => {
@@ -207,14 +209,18 @@ const HeroCarousel = React.memo(() => {
           transition={{ duration: 1 }}
           className="absolute inset-0"
         >
-          <img 
-            src={lines[index].img} 
-            alt={lines[index].name}
-            className="w-full h-full object-cover rounded-[40px] transition-all duration-700"
-            referrerPolicy="no-referrer"
-            fetchpriority={index === 0 ? "high" : "auto"}
-            loading={index === 0 ? "eager" : "lazy"}
-          />
+          <picture>
+            <source media="(max-width: 768px)" srcSet={lines[index].imgMobile} />
+            <source media="(min-width: 769px)" srcSet={lines[index].imgDesktop} />
+            <img 
+              src={lines[index].imgDesktop} 
+              alt={lines[index].name}
+              className="w-full h-full object-cover rounded-[40px] transition-all duration-700"
+              referrerPolicy="no-referrer"
+              fetchpriority={index === 0 ? "high" : "auto"}
+              loading={index === 0 ? "eager" : "lazy"}
+            />
+          </picture>
           <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-transparent opacity-60" />
           <div className="absolute bottom-10 left-10 right-10 z-20">
             <motion.div
@@ -746,14 +752,17 @@ export default function DistribuidorGabriel() {
                 <Logo />
               </div>
               
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-[1.1] tracking-tighter">
-                Domine sua região com a marca que <br />
-                <span className="text-[#F4CDD4] drop-shadow-[0_0_10px_rgba(244,205,212,0.3)]">Define o Padrão</span> de Cosmético Pet.
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6">
+                <span className="w-2 h-2 rounded-full bg-[#F4CDD4] animate-pulse" />
+                <span className="text-white text-xs font-bold tracking-wider uppercase">Seja um Distribuidor</span>
+              </div>
+              
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-[1.1] tracking-tighter uppercase">
+                SEJA UM DISTRIBUIDOR BUBBLES E DOMINE A SUA REGIÃO COM A MARCA QUE <span className="text-[#F4CDD4] drop-shadow-[0_0_10px_rgba(244,205,212,0.3)]">DEFINE O PADRÃO</span> DO COSMÉTICO PET.
               </h1>
               
               <p className="text-white/60 text-base md:text-lg mb-6 max-w-xl leading-relaxed">
-                Seja o parceiro estratégico dos centros de estética pet mais exigentes. 
-                Ofereça a linha que combina <span className="text-white font-bold">alta performance</span>, rendimento industrial e fidelidade.
+                Leve inovação, qualidade premium e lucratividade para o seu negócio através da marca que mais cresce no setor.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-6 items-stretch">
@@ -772,7 +781,7 @@ export default function DistribuidorGabriel() {
                     onClick={handleOpenForm}
                     className="bg-[#F4CDD4] text-[#080808] px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:shadow-[0_0_30px_rgba(244,205,212,0.4)] transition-all flex items-center justify-center gap-2 group flex-1 w-full md:w-auto text-center leading-tight"
                   >
-                    Me Candidatar Agora <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform hidden md:block" />
+                    Quero ser um distribuidor <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform hidden md:block" />
                   </motion.button>
                 <div className="flex items-center gap-4 px-6 py-4 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm flex-1">
                   <div className="flex -space-x-3">
@@ -850,10 +859,10 @@ export default function DistribuidorGabriel() {
               {
                 name: "Essential",
                 target: "Pet Shops em Crescimento",
-                pos: "Porta de entrada premium qualidade acessível.",
+                pos: "Linha Premium com preço acessível. O equilíbrio perfeito entre custo-benefício e alto desempenho profissional.",
                 visual: "Embalagem rosa/neutra, tom amigável.",
-                highlightLabel: "Diluição",
-                highlightValue: "1:5 (rende até 300 banhos/5L).",
+                highlightLabel: "Recorrência",
+                highlightValue: "Alta rotatividade e aceitação imediata.",
                 quote: "Qualidade Bubbles com o melhor custo por banho",
                 color: "#F4CDD4",
                 logo: "https://bubbles.gabrielxavier.online/ESSENTIAL.svg",
@@ -862,10 +871,10 @@ export default function DistribuidorGabriel() {
               {
                 name: "Xperience",
                 target: "Experiência Sensorial",
-                pos: "Fragrâncias marcantes, Sniff Tech.",
-                visual: "Embalagem premium, dourado, aspiracional.",
+                pos: "Focada em posicionamento de mercado, diferenciação da concorrência e aumento imediato do ticket médio do banho e tosa.",
+                visual: "Uma explosão de experiências. Embalagens dinâmicas que podem assumir todas as cores.",
                 highlightLabel: "Tecnologia",
-                highlightValue: "Sniff Tech (fixação prolongada).",
+                highlightValue: "Formulada com as últimas novidades e tendências do mercado mundial de cosmética.",
                 quote: "Seu pet vai cheirar tão bem que vão perguntar o segredo",
                 color: "#C8A96E",
                 logo: "https://bubbles.gabrielxavier.online/XPERIENCE.svg",
@@ -875,8 +884,8 @@ export default function DistribuidorGabriel() {
                 name: "Collora",
                 target: "Estética Criativa",
                 pos: "Coloração pet profissional segura e vibrante.",
-                visual: "Embalagem com acento roxo/lilás.",
-                highlightLabel: "Argumento",
+                visual: "Embalagens vibrantes com conceito arco-íris.",
+                highlightLabel: "Inovação",
                 highlightValue: "Transforme a pelagem em arte com segurança.",
                 quote: "Transforme a pelagem em arte com segurança comprovada",
                 color: "#B066C6",
@@ -983,7 +992,7 @@ export default function DistribuidorGabriel() {
                   {[
                     { icon: BarChart3, title: "Ganhos Exponenciais", desc: "Estrutura de preços desenhada para o seu crescimento." },
                   { icon: Zap, title: "Giro de Estoque", desc: "Produtos de alta recorrência e aceitação imediata." },
-                  { icon: Shield, title: "Segurança de Margem", desc: "Política rígida que protege o seu lucro na ponta." },
+                  { icon: Shield, title: "Segurança de Mercado", desc: "Segurança de Margem - Política rígida de controle de preço mínimo de venda (protegendo o distribuidor contra a canibalização de preços)." },
                   { icon: Users, title: "Fidelização", desc: "O profissional que usa Bubbles® não aceita substitutos." }
                 ].map((item, idx) => (
                   <motion.div 
@@ -1012,7 +1021,7 @@ export default function DistribuidorGabriel() {
               </h2>
               <p className="text-white/60 text-sm md:text-base mb-8 leading-relaxed">
                 Nossa Linha PRO oferece diluição de até 1:10, garantindo o menor custo por banho do mercado. 
-                Para o distribuidor, isso se traduz em um <span className="text-white font-bold">Potencial de Ganho de até 50%</span> e recompra garantida.
+                Para o distribuidor, isso se traduz em <span className="text-white font-bold">lucratividade competitiva com margens de até 45%</span> e recompra garantida.
               </p>
               <ul className="space-y-3 md:space-y-4">
                 {[
@@ -1179,7 +1188,8 @@ export default function DistribuidorGabriel() {
           <div>
             <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Excelência Logística</span>
             <h2 className="text-3xl md:text-4xl font-black text-white mb-8 leading-tight tracking-tight uppercase break-words">
-              Suporte Total: Do Pedido à <br />
+              Suporte Total: <br className="hidden md:block" />
+              Do Pedido à <br className="block md:hidden" />
               <span className="text-[#F4CDD4]">Satisfação do seu Cliente.</span>
             </h2>
             <p className="text-white/60 text-base mb-12 leading-relaxed">
@@ -1223,15 +1233,19 @@ export default function DistribuidorGabriel() {
           <div className="relative">
             <div className="absolute inset-0 bg-[#F4CDD4]/10 blur-[80px] rounded-full -z-10" />
             <div className="bg-[#121212] border border-white/10 p-4 rounded-[40px] shadow-2xl relative overflow-hidden">
-              <img 
-                src="https://bubbles.gabrielxavier.online/foto_expedicao.jpg" 
-                alt="Bubbles® Logistics" 
-                className="rounded-[32px] w-full transition-all duration-700"
-                referrerPolicy="no-referrer"
-                loading="lazy"
-                width="600"
-                height="400"
-              />
+              <picture>
+                <source media="(max-width: 768px)" srcSet="https://bubbles.gabrielxavier.online/bubbles-estoque-expedicao-mobile.webp" />
+                <source media="(min-width: 769px)" srcSet="https://bubbles.gabrielxavier.online/bubbles-estoque-expedicao-desktop.webp" />
+                <img 
+                  src="https://bubbles.gabrielxavier.online/bubbles-estoque-expedicao-desktop.webp" 
+                  alt="Bubbles® Logistics" 
+                  className="rounded-[32px] w-full transition-all duration-700"
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                  width="600"
+                  height="400"
+                />
+              </picture>
               <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-transparent opacity-40" />
               <div className="absolute bottom-6 left-6 right-6 md:bottom-10 md:left-10 md:right-10">
                 <p className="text-white font-black text-[10px] md:text-sm uppercase tracking-widest bg-[#F4CDD4] text-[#080808] px-3 md:px-4 py-1.5 md:py-2 rounded-full inline-block shadow-xl">
@@ -1249,7 +1263,7 @@ export default function DistribuidorGabriel() {
           <div className="text-center mb-12 md:mb-16">
             <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Vozes do Sucesso</span>
             <h2 className="text-2xl md:text-4xl font-black text-white mb-6 tracking-tight uppercase break-words">
-              O que dizem nossos <span className="text-[#F4CDD4]">Distribuidores</span>
+              Mais de 50 distribuidores em todo o Brasil confiam na Bubbles. Veja o que eles dizem:
             </h2>
           </div>
 
@@ -1259,14 +1273,10 @@ export default function DistribuidorGabriel() {
               className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0"
             >
               {[
-                { name: "Ricardo Silva Santos", region: "São Paulo/SP", gender: "male", text: "A Bubbles mudou o patamar do meu negócio.. aceitação dos groomers é imediata e a recompra é garantida, vale muito a pena o investimento" },
-              { name: "Ana Oliveira Souza", region: "Curitiba/PR", gender: "female", text: "Suporte logistico impecavel!! nunca fico sem estoque e a margem de lucro permite escala real no faturamento." },
-              { name: "Marcos Santos Pereira", region: "Belo Horizonte/MG", gender: "male", text: "Trabalhar com uma marca que preza pela ética e qualidade facilita muito a abertura de novas portas... os clientes ja conhecem e confiam" },
-              { name: "Juliana Costa Lima", region: "Salvador/BA", gender: "female", text: "Rentabilidade da linha PRO é o diferencial, Meus clientes economizam e eu lucro mais" },
-              { name: "Fernando Souza Alves", region: "Porto Alegre/RS", gender: "male", text: "Elite Bubbles abre portas que antes eram impossiveis, prestígio total" },
-              { name: "Patrícia Lima Mendes", region: "Goiânia/GO", gender: "female", text: "Facilidade de positivação é impressionante! O produto se vende sozinho, qualidade superior mesmo." },
-              { name: "Roberto Mendes Vieira", region: "Manaus/AM", gender: "male", text: "Mesmo longe da fábrica o suporte é ágil. Logística de alta performance faz toda a diferença no dia a dia" },
-              { name: "Carla Ferreira Gomes", region: "Recife/PE", gender: "female", text: "Bonificações por metas são um incentivo real, sinto que a marca cresce junto com agente." }
+                { name: "MANTYPET", text: "Ser distribuidor da Bubbles tem se mostrado uma experiência extremamente enriquecedora e estratégica, marcada por aprendizado constante e resultados positivos desde o início, mesmo sem experiência prévia no segmento de banho e tosa. O suporte próximo e eficiente da equipe Bubbles, aliado à excelência dos produtos, nos transmite total segurança operacional e fortalece nossa atuação comercial, refletindo diretamente na alta aceitação e satisfação dos clientes." },
+                { name: "Assispet", text: "a Bubbles se tornou em pouco tempo um dos nossos principais fornecedores, um grande parceiro que veio pra somar trabalho e resultado em nossa distribuidora, com excelente atendimento e suporte de toda equipe, uma empresa com um leque imenso de produtos, sempre trazendo novidades ao mercado pet." },
+                { name: "SERRAPET", text: "Ser distribuidor Bubbles vai muito além de vender produtos, é viver, na prática, a transformação que eles causam. É acompanhar de perto aquele pet que chega para o banho e sai renovado, com o pelo macio, brilho evidente e um perfume que realmente marca. É ver o olhar do cliente mudar, o elogio espontâneo surgir e saber que você fez parte daquela experiência. No dia a dia, é sentir a diferença na rotina dos profissionais: produtos que rendem, que facilitam o trabalho e elevam o padrão do atendimento. É perceber que não se trata só de estética, mas de cuidado, bem-estar e valorização do serviço prestado. Ser Bubbles é criar conexão com os pet shops, com os groomers e com cada cliente que volta justamente pela experiência que teve. É ter orgulho de representar algo que entrega resultado de verdade, que fideliza e que faz o negócio crescer junto. No fim, ser distribuidor Bubbles é isso: não é só sobre o que você entrega… é sobre o que as pessoas sentem depois, pois a satisfação do cliente do meu cliente é a minha satisfação." },
+                { name: "TOPET", text: "Trabalhar com a Bubbles é ter a segurança de estar ao lado de uma marca forte, reconhecida e em constante crescimento no mercado pet. Seu investimento consistente em marketing e inovação faz com que os produtos tenham alta aceitação e desejo, criando uma conexão natural com os clientes. A cada chegada, percecebemos o quanto a marca já é aguardada — existe uma expectativa, um interesse genuíno e uma confiança construída ao longo do tempo. Isso torna nosso trabalho muito mais fluido, fortalecendo parcerias e facilitando o acesso aos clientes. Com a Bubbles, unimos credibilidade, inovação e propósito, levando aos nossos clientes não apenas produtos, mas uma experiência que já é valorizada e esperada pelo mercado." }
             ].map((testimonial, i) => (
               <motion.div 
                 key={i}
@@ -1286,17 +1296,6 @@ export default function DistribuidorGabriel() {
                   <p className="text-white/60 text-xs md:text-sm italic mb-6 leading-relaxed relative z-10">"{testimonial.text}"</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full border-2 border-[#F4CDD4]/20 overflow-hidden shrink-0">
-                    <img 
-                      src={`https://randomuser.me/api/portraits/${testimonial.gender === 'male' ? 'men' : 'women'}/${(i % 50) + 1}.jpg`} 
-                      alt={testimonial.name}
-                      className="w-full h-full object-cover"
-                      referrerPolicy="no-referrer"
-                      loading="lazy"
-                      width="48"
-                      height="48"
-                    />
-                  </div>
                   <div>
                     <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
                       <p className="text-white font-black text-xs md:text-sm tracking-tight">{testimonial.name}</p>
@@ -1304,7 +1303,6 @@ export default function DistribuidorGabriel() {
                         <CheckCircle2 size={8} /> Verificado
                       </span>
                     </div>
-                    <p className="text-[#F4CDD4] text-[8px] md:text-[10px] font-bold uppercase tracking-widest">{testimonial.region}</p>
                   </div>
                 </div>
               </motion.div>
@@ -1344,7 +1342,7 @@ export default function DistribuidorGabriel() {
               onClick={() => setIsFormOpen(true)}
               className="bg-[#F4CDD4] text-[#080808] px-10 md:px-20 py-3 md:py-4 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-xs md:text-base transition-all flex items-center justify-center gap-3 md:gap-4 mx-auto group w-full sm:w-auto shadow-2xl max-w-[180px] md:max-w-none text-center leading-tight"
             >
-              Me Candidatar Agora <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform hidden md:block" />
+              Me tornar um distribuidor agora <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform hidden md:block" />
             </motion.button>
             
             <p className="mt-8 md:mt-12 text-white/40 text-[8px] md:text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2">
@@ -1402,7 +1400,7 @@ const ROICalculator = () => {
   const [investment, setInvestment] = useState(10000);
   const paybackMonths = "2-3";
 
-  const revenue = investment * 2.0; 
+  const revenue = Math.round(investment / 0.55); 
   const profit = revenue - investment;
 
   return (
@@ -1462,7 +1460,7 @@ const ROICalculator = () => {
             <div className="grid grid-cols-2 gap-2 md:gap-4">
               <div className="bg-white/5 p-2 md:p-4 rounded-xl md:rounded-2xl border border-white/5">
                 <p className="text-white/40 text-[6px] md:text-[8px] font-black uppercase tracking-widest mb-0.5 md:mb-1">Margem Média</p>
-                <p className="text-xs md:text-base font-black text-white">Até 50%</p>
+                <p className="text-xs md:text-base font-black text-white">Até 45%</p>
               </div>
               <motion.div 
                 animate={{ 
