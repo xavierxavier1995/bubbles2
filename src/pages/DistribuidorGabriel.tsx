@@ -17,7 +17,7 @@ const Logo = React.memo(() => (
       alt="Bubbles® Logo" 
       className="h-8 md:h-10 w-auto brightness-0 invert"
       referrerPolicy="no-referrer"
-      fetchpriority="high"
+      fetchPriority="high"
       width="150"
       height="40"
     />
@@ -221,7 +221,7 @@ const HeroCarousel = React.memo(() => {
               alt={lines[index].name}
               className="w-full h-full object-cover rounded-[40px] transition-all duration-700"
               referrerPolicy="no-referrer"
-              fetchpriority={index === 0 ? "high" : "auto"}
+              fetchPriority={index === 0 ? "high" : "auto"}
               loading={index === 0 ? "eager" : "lazy"}
             />
           </picture>
@@ -637,6 +637,7 @@ export default function DistribuidorGabriel() {
   const statsCarouselRef = useRef<HTMLDivElement>(null);
   const profitabilityCarouselRef = useRef<HTMLDivElement>(null);
   const testimonialsCarouselRef = useRef<HTMLDivElement>(null);
+  const isHoveredTestimonials = useRef(false);
   const [activeTestimonialIndex, setActiveTestimonialIndex] = useState(0);
 
   const handleTestimonialScroll = () => {
@@ -691,6 +692,7 @@ export default function DistribuidorGabriel() {
     const intervals = carousels.map(({ ref, disableOnMobile }) => {
       return setInterval(() => {
         if (disableOnMobile && window.innerWidth <= 768) return;
+        if (ref === testimonialsCarouselRef && isHoveredTestimonials.current) return;
         if (ref.current) {
           const { scrollLeft, scrollWidth, clientWidth } = ref.current;
           // Se estiver perto do fim, volta pro começo com scroll suave
@@ -993,7 +995,7 @@ export default function DistribuidorGabriel() {
       </section>
 
       {/* Argumentation 1: Profitability */}
-      <section id="rentabilidade" className="py-16 md:py-20 px-6 md:px-10 border-t border-white/5 relative">
+      <section id="rentabilidade" className="py-16 md:py-20 px-6 md:px-10 border-t border-white/5 relative z-0">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-[#F4CDD4]/5 blur-[150px] rounded-full pointer-events-none" />
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
@@ -1269,7 +1271,11 @@ export default function DistribuidorGabriel() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-16 md:py-20 px-6 md:px-10 bg-[#080808] relative overflow-hidden">
+      <section 
+        className="py-16 md:py-20 px-6 md:px-10 bg-[#080808] relative overflow-hidden"
+        onMouseEnter={() => isHoveredTestimonials.current = true}
+        onMouseLeave={() => isHoveredTestimonials.current = false}
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 md:mb-16">
             <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Vozes do Sucesso</span>
