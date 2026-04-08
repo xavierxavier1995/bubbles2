@@ -153,11 +153,11 @@ const BenefitsMarquee = React.memo(() => {
           100% { transform: translateX(-50%); }
         }
         .animate-marquee {
-          animation: marquee 12s linear infinite;
+          animation: marquee 9.6s linear infinite;
         }
         @media (max-width: 768px) {
           .animate-marquee {
-            animation: marquee 8s linear infinite;
+            animation: marquee 6.4s linear infinite;
           }
         }
         .no-scrollbar::-webkit-scrollbar {
@@ -682,14 +682,15 @@ export default function DistribuidorGabriel() {
 
   useEffect(() => {
     const carousels = [
-      statsCarouselRef, 
-      profitabilityCarouselRef,
-      testimonialsCarouselRef,
-      productLinesCarouselRef
+      { ref: statsCarouselRef, disableOnMobile: false }, 
+      { ref: profitabilityCarouselRef, disableOnMobile: false },
+      { ref: testimonialsCarouselRef, disableOnMobile: true },
+      { ref: productLinesCarouselRef, disableOnMobile: true }
     ];
     
-    const intervals = carousels.map(ref => {
+    const intervals = carousels.map(({ ref, disableOnMobile }) => {
       return setInterval(() => {
+        if (disableOnMobile && window.innerWidth <= 768) return;
         if (ref.current) {
           const { scrollLeft, scrollWidth, clientWidth } = ref.current;
           // Se estiver perto do fim, volta pro começo com scroll suave
@@ -996,7 +997,7 @@ export default function DistribuidorGabriel() {
         <div className="absolute top-0 right-0 w-1/2 h-full bg-[#F4CDD4]/5 blur-[150px] rounded-full pointer-events-none" />
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-            <div className="order-2 lg:order-1">
+            <div className="order-2 lg:order-1 min-w-0">
               <CarouselWrapper carouselRef={profitabilityCarouselRef}>
                 <div className="flex lg:grid lg:grid-cols-2 gap-4 lg:gap-6 overflow-x-auto lg:overflow-visible pb-8 lg:pb-0 snap-x snap-mandatory no-scrollbar -mx-6 px-6 lg:mx-0 lg:px-0" ref={profitabilityCarouselRef}>
                   {[
@@ -1023,7 +1024,7 @@ export default function DistribuidorGabriel() {
               </div>
               </CarouselWrapper>
             </div>
-            <div className="order-1 lg:order-2">
+            <div className="order-1 lg:order-2 min-w-0">
               <span className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Ganhos Exponenciais</span>
               <h2 className="text-2xl md:text-4xl font-black text-white mb-6 md:mb-8 leading-tight tracking-tight uppercase break-words">
                 Segurança de Margem <br className="block md:hidden" />e <br className="hidden md:block" />
@@ -1102,7 +1103,7 @@ export default function DistribuidorGabriel() {
             </motion.div>
           </div>
 
-          <CarouselWrapper carouselRef={statsCarouselRef}>
+          <CarouselWrapper carouselRef={statsCarouselRef} hideArrows={true}>
             <div className="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-10 px-10 lg:mx-0 lg:px-0 lg:grid lg:grid-cols-5 lg:gap-2" ref={statsCarouselRef}>
               {[
                 { label: "Tempo de Mercado", val: "+7 Anos", icon: Clock, desc: "Pioneirismo e Inovação" },
@@ -1463,7 +1464,7 @@ const ROICalculator = () => {
               <input 
                 type="range" min="10000" max="100000" step="5000"
                 value={investment} onChange={(e) => setInvestment(parseInt(e.target.value))}
-                className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-[#F4CDD4]"
+                className="w-full h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-[#F4CDD4] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-8 [&::-webkit-slider-thumb]:h-8 md:[&::-webkit-slider-thumb]:w-6 md:[&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:bg-[#F4CDD4] [&::-webkit-slider-thumb]:rounded-full"
               />
               <div className="flex justify-between text-[7px] md:text-[8px] text-white/40 mt-2 md:mt-3 font-bold uppercase tracking-widest">
                 <span className="text-[#F4CDD4]">Mínimo R$ 10k</span>
