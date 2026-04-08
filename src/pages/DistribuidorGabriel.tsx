@@ -377,7 +377,25 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
 
   const isQualified = formData.hasInvestment === 'yes';
 
+  const isEmailValid = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isPhoneValid = (phone: string) => phone.replace(/\D/g, '').length >= 10;
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 11) value = value.slice(0, 11);
+    
+    if (value.length > 2) {
+      value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+    }
+    if (value.length > 9) {
+      value = `${value.slice(0, 9)}-${value.slice(9)}`;
+    }
+    
+    setFormData({...formData, whatsapp: value});
+  };
+
   const finishForm = () => {
+    localStorage.setItem('formSubmitted', 'true');
     if (isQualified) {
       const message = `Olá! Me candidatei como distribuidor Bubbles®. 
 Nome: ${formData.name}
@@ -448,26 +466,32 @@ ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
                       <input 
                         type="email" 
                         placeholder="seu@email.com"
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors"
+                        className={`w-full bg-white/5 border ${formData.email && !isEmailValid(formData.email) ? 'border-red-500' : 'border-white/10'} rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors`}
                         value={formData.email}
                         onChange={e => setFormData({...formData, email: e.target.value})}
                       />
+                      {formData.email && !isEmailValid(formData.email) && (
+                        <span className="text-red-500 text-[10px] mt-1 block">E-mail inválido.</span>
+                      )}
                     </div>
                     <div>
                       <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 block">Seu WhatsApp</label>
                       <input 
                         type="tel" 
                         placeholder="(00) 00000-0000"
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors"
+                        className={`w-full bg-white/5 border ${formData.whatsapp && !isPhoneValid(formData.whatsapp) ? 'border-red-500' : 'border-white/10'} rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors`}
                         value={formData.whatsapp}
-                        onChange={e => setFormData({...formData, whatsapp: e.target.value})}
+                        onChange={handlePhoneChange}
                       />
+                      {formData.whatsapp && !isPhoneValid(formData.whatsapp) && (
+                        <span className="text-red-500 text-[10px] mt-1 block">Telefone inválido. Inclua o DDD.</span>
+                      )}
                     </div>
                   </div>
                 </div>
                 <button 
                   onClick={handleNext}
-                  disabled={!formData.name || !formData.email || !formData.whatsapp}
+                  disabled={!formData.name || !isEmailValid(formData.email) || !isPhoneValid(formData.whatsapp)}
                   className="w-full bg-[#F4CDD4] text-[#080808] py-5 rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:hover:scale-100 shadow-[0_0_20px_rgba(244,205,212,0.2)] flex items-center justify-center gap-2 group"
                 >
                   Próxima Etapa <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -769,10 +793,11 @@ export default function DistribuidorGabriel() {
       
       if (e.clientY <= 0) {
         const lastShown = localStorage.getItem('lastExitPopupTime');
+        const hasSubmitted = localStorage.getItem('formSubmitted');
         const now = Date.now();
         const fiveMinutes = 5 * 60 * 1000;
         
-        if (!lastShown || now - parseInt(lastShown) > fiveMinutes) {
+        if (!hasSubmitted && (!lastShown || now - parseInt(lastShown) > fiveMinutes)) {
           setIsExitPopupOpen(true);
           localStorage.setItem('lastExitPopupTime', now.toString());
         }
