@@ -308,9 +308,9 @@ const ExitIntentPopup = ({ isOpen, onClose, onOpenForm }: { isOpen: boolean, onC
           <div className="w-16 h-16 bg-[#F4CDD4]/10 text-[#F4CDD4] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(244,205,212,0.2)]">
             <Calculator size={32} />
           </div>
-          <h2 className="text-2xl font-black text-white mb-4 tracking-tight">Não perca os números!</h2>
+          <h2 className="text-2xl font-black text-white mb-4 tracking-tight">Espere! Não perca essa oportunidade.</h2>
           <p className="text-white/60 mb-8 text-xs">
-            Baixe nosso <span className="text-[#F4CDD4] font-bold">Guia de Rentabilidade</span> e veja como nossos parceiros faturam alto no mercado pet.
+            O mercado pet está em plena expansão. <span className="text-[#F4CDD4] font-bold">Seja um distribuidor Bubbles</span> e garanta exclusividade na sua região antes que outro empreendedor o faça.
           </p>
           
           <div className="space-y-4">
@@ -321,7 +321,7 @@ const ExitIntentPopup = ({ isOpen, onClose, onOpenForm }: { isOpen: boolean, onC
               }}
               className="w-full bg-[#F4CDD4] text-[#080808] py-4 rounded-xl font-black uppercase tracking-widest hover:bg-white transition-colors"
             >
-              Quero o Guia Gratuito
+              Quero me candidatar agora
             </button>
             <button 
               onClick={onClose}
