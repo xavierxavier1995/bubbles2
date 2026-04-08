@@ -188,6 +188,7 @@ const BenefitsMarquee = React.memo(() => {
 
 const HeroCarousel = React.memo(() => {
   const [index, setIndex] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const lines = [
     { name: "Linha PRO", desc: "Máximo rendimento para profissionais", imgDesktop: "https://bubbles.gabrielxavier.online/bubbles-linha-pro-desktop.webp", imgMobile: "https://bubbles.gabrielxavier.online/bubbles-linha-pro-mobile.webp" },
     { name: "Essential", desc: "O melhor custo-benefício do mercado", imgDesktop: "https://bubbles.gabrielxavier.online/bubbles-linha-essential-desktop.webp", imgMobile: "https://bubbles.gabrielxavier.online/bubbles-linha-essential-mobile.webp" },
@@ -211,8 +212,9 @@ const HeroCarousel = React.memo(() => {
       { threshold: 0.1 }
     );
 
-    const section = document.getElementById('linhas');
-    if (section) observer.observe(section);
+    if (carouselRef.current) {
+      observer.observe(carouselRef.current);
+    }
 
     return () => {
       clearInterval(timer);
@@ -221,7 +223,7 @@ const HeroCarousel = React.memo(() => {
   }, []);
 
   return (
-    <div className="relative w-full h-full group">
+    <div ref={carouselRef} className="relative w-full h-full group">
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
@@ -358,6 +360,7 @@ const ExitIntentPopup = ({ isOpen, onClose, onOpenForm }: { isOpen: boolean, onC
 
 const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -393,8 +396,6 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
     
     setFormData({...formData, whatsapp: value});
   };
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const finishForm = async () => {
     localStorage.setItem('formSubmitted', 'true');
