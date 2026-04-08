@@ -5,10 +5,12 @@ import DistribuidorGabriel from './pages/DistribuidorGabriel';
 import Sitemap from './pages/Sitemap';
 
 export default function App() {
+  const isDev = import.meta.env.DEV;
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/sitemap" replace />} />
+        <Route path="/" element={isDev ? <Navigate to="/sitemap" replace /> : <DistribuidorGabriel />} />
         <Route path="/sitemap" element={<Layout><Sitemap /></Layout>} />
         <Route path="/design-system-docs" element={<Layout><DesignSystemDocs /></Layout>} />
         <Route path="/distribuidor-gabriel" element={<DistribuidorGabriel />} />
