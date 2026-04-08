@@ -196,10 +196,28 @@ const HeroCarousel = React.memo(() => {
   ];
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % lines.length);
-    }, 4000);
-    return () => clearInterval(timer);
+    let timer: NodeJS.Timeout;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          timer = setInterval(() => {
+            setIndex((prev) => (prev + 1) % lines.length);
+          }, 4000);
+        } else {
+          clearInterval(timer);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const section = document.getElementById('linhas');
+    if (section) observer.observe(section);
+
+    return () => {
+      clearInterval(timer);
+      observer.disconnect();
+    };
   }, []);
 
   return (
@@ -689,25 +707,49 @@ export default function DistribuidorGabriel() {
       { ref: productLinesCarouselRef, disableOnMobile: true }
     ];
     
-    const intervals = carousels.map(({ ref, disableOnMobile }) => {
-      return setInterval(() => {
-        if (disableOnMobile && window.innerWidth <= 768) return;
-        if (ref === testimonialsCarouselRef && isHoveredTestimonials.current) return;
-        if (ref.current) {
-          const { scrollLeft, scrollWidth, clientWidth } = ref.current;
-          // Se estiver perto do fim, volta pro começo com scroll suave
-          if (scrollLeft + clientWidth >= scrollWidth - 10) {
-            ref.current.scrollTo({ left: 0, behavior: 'smooth' });
+    const intervals: NodeJS.Timeout[] = [];
+    const observers: IntersectionObserver[] = [];
+
+    carousels.forEach(({ ref, disableOnMobile }) => {
+      let timer: NodeJS.Timeout;
+      
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            timer = setInterval(() => {
+              if (disableOnMobile && window.innerWidth <= 768) return;
+              if (ref === testimonialsCarouselRef && isHoveredTestimonials.current) return;
+              if (ref.current) {
+                const { scrollLeft, scrollWidth, clientWidth } = ref.current;
+                // Se estiver perto do fim, volta pro começo com scroll suave
+                if (scrollLeft + clientWidth >= scrollWidth - 10) {
+                  ref.current.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                  // Scroll de um card por vez aproximadamente
+                  const scrollStep = clientWidth > 768 ? 400 : 300;
+                  ref.current.scrollBy({ left: scrollStep, behavior: 'smooth' });
+                }
+              }
+            }, 4000);
+            intervals.push(timer);
           } else {
-            // Scroll de um card por vez aproximadamente
-            const scrollStep = clientWidth > 768 ? 400 : 300;
-            ref.current.scrollBy({ left: scrollStep, behavior: 'smooth' });
+            clearInterval(timer);
           }
-        }
-      }, 4000);
+        },
+        { threshold: 0.1 }
+      );
+
+      // Observa o container do carrossel
+      if (ref.current) {
+        observer.observe(ref.current);
+      }
+      observers.push(observer);
     });
 
-    return () => intervals.forEach(clearInterval);
+    return () => {
+      intervals.forEach(clearInterval);
+      observers.forEach(obs => obs.disconnect());
+    };
   }, []);
 
   const scrollCarousel = (ref: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
