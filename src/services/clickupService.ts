@@ -100,7 +100,9 @@ export async function createLeadTask(rawFormData: LeadFormData): Promise<ClickUp
   const DEFAULT_STATUS = process.env.CLICKUP_DEFAULT_STATUS || "NOVOS";
   const DEFAULT_TAGS = process.env.CLICKUP_DEFAULT_TAGS ? process.env.CLICKUP_DEFAULT_TAGS.split(',') : ["tráfego"];
 
+  console.log("[CLICKUP SERVICE] Verificando credenciais...");
   if (!CLICKUP_TOKEN || !LIST_ID) {
+    console.error("[CLICKUP SERVICE] ERRO: Token ou List ID ausentes.");
     throw new Error("Configurações do ClickUp (Token ou List ID) ausentes no servidor.");
   }
 
@@ -114,6 +116,8 @@ export async function createLeadTask(rawFormData: LeadFormData): Promise<ClickUp
     tags: DEFAULT_TAGS
   };
 
+  console.log("[CLICKUP SERVICE] Enviando payload para o ClickUp:", JSON.stringify(payload, null, 2));
+
   // 5. Faz a requisição para a API do ClickUp
   try {
     const response = await fetch(`https://api.clickup.com/api/v2/list/${LIST_ID}/task`, {
@@ -126,8 +130,10 @@ export async function createLeadTask(rawFormData: LeadFormData): Promise<ClickUp
     });
 
     const responseData = await response.json();
+    console.log("[CLICKUP SERVICE] Resposta da API do ClickUp:", response.status, JSON.stringify(responseData, null, 2));
 
     if (!response.ok) {
+      console.error("[CLICKUP SERVICE] Falha ao criar tarefa:", responseData);
       return {
         success: false,
         status: "error",

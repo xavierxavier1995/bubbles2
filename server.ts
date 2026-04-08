@@ -20,8 +20,11 @@ async function startServer() {
   });
 
   app.post("/api/leads", async (req, res) => {
+    console.log("[SERVER] Recebendo requisição em /api/leads");
+    console.log("[SERVER] Body recebido:", JSON.stringify(req.body, null, 2));
     try {
       const result = await createLeadTask(req.body);
+      console.log("[SERVER] Resultado do ClickUpService:", JSON.stringify(result, null, 2));
       
       if (!result.success) {
         // Fluxo alternativo (ex: regra de negócio barrou a criação)
@@ -30,7 +33,7 @@ async function startServer() {
 
       return res.status(201).json(result);
     } catch (error: any) {
-      console.error("Erro ao processar lead:", error);
+      console.error("[SERVER] Erro ao processar lead:", error);
       return res.status(500).json({
         success: false,
         status: "error",

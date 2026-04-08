@@ -394,8 +394,53 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
     setFormData({...formData, whatsapp: value});
   };
 
-  const finishForm = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const finishForm = async () => {
     localStorage.setItem('formSubmitted', 'true');
+    setIsSubmitting(true);
+    console.log("[FRONTEND] Iniciando envio do formulário...");
+    console.log("[FRONTEND] Dados do formulário:", formData);
+
+    try {
+      // Mapeando os dados do formData para o formato esperado pelo backend
+      const payload = {
+        nome: formData.name,
+        email: formData.email,
+        telefone: formData.whatsapp,
+        possui_cnpj: formData.hasCnpj === 'yes' ? 'Sim' : 'Não',
+        utiliza_erp: formData.hasErp === 'yes' ? 'Sim' : 'Não',
+        cnpj: formData.cnpj,
+        cidade_estabelecimento: formData.city,
+        cidade_atuacao: formData.targetCities,
+        investimento: formData.hasInvestment === 'yes' ? 'Acima de 5.000,00' : 'Abaixo de 5.000,00'
+      };
+
+      console.log("[FRONTEND] Payload mapeado para a API:", payload);
+
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      console.log("[FRONTEND] Resposta da API:", response.status, result);
+
+      if (!response.ok) {
+        console.error("[FRONTEND] Erro retornado pela API:", result);
+      } else {
+        console.log("[FRONTEND] Lead enviado com sucesso para o ClickUp!");
+      }
+
+    } catch (error) {
+      console.error("[FRONTEND] Erro ao fazer a requisição para /api/leads:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+
     if (isQualified) {
       const message = `Olá! Me candidatei como distribuidor Bubbles®. 
 Nome: ${formData.name}
@@ -647,13 +692,19 @@ ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
                 )}
 
                 <div className="flex gap-4">
-                  <button onClick={handlePrev} className="flex-1 bg-white/5 text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors">Voltar</button>
+                  <button onClick={handlePrev} disabled={isSubmitting} className="flex-1 bg-white/5 text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors disabled:opacity-50">Voltar</button>
                   <button 
                     onClick={finishForm}
-                    disabled={!formData.hasInvestment}
-                    className="flex-[2] bg-[#F4CDD4] text-[#080808] py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform disabled:opacity-50 shadow-[0_0_20px_rgba(244,205,212,0.2)] flex items-center justify-center gap-2 group"
+                    disabled={!formData.hasInvestment || isSubmitting}
+                    className="flex-[2] bg-[#F4CDD4] text-[#080808] py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform disabled:opacity-50 shadow-[0_0_20px_rgba(244,205,212,0.2)] flex items-center justify-center gap-2 group relative"
                   >
-                    {formData.hasInvestment === 'yes' ? 'Finalizar Candidatura' : 'Encerrar'} <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    {isSubmitting ? (
+                      <div className="w-5 h-5 border-2 border-[#080808]/30 border-t-[#080808] rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        {formData.hasInvestment === 'yes' ? 'Finalizar Candidatura' : 'Encerrar'} <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
                   </button>
                 </div>
               </motion.div>
