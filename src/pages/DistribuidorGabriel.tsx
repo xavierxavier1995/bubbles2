@@ -24,7 +24,7 @@ const Logo = React.memo(() => (
   </div>
 ));
 
-const CarouselWrapper = React.memo(({ children, carouselRef, showOnDesktop = false }: { children: React.ReactNode, carouselRef: React.RefObject<HTMLDivElement | null>, showOnDesktop?: boolean }) => {
+const CarouselWrapper = React.memo(({ children, carouselRef, showOnDesktop = false, showGradient = false }: { children: React.ReactNode, carouselRef: React.RefObject<HTMLDivElement | null>, showOnDesktop?: boolean, showGradient?: boolean }) => {
   const scroll = (direction: 'left' | 'right') => {
     if (carouselRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
@@ -48,19 +48,23 @@ const CarouselWrapper = React.memo(({ children, carouselRef, showOnDesktop = fal
 
   return (
     <div className="relative group/carousel">
-      <div className="absolute top-0 bottom-0 -left-6 md:left-0 w-12 md:w-32 bg-gradient-to-r from-[#080808] via-[#080808]/80 to-transparent z-10 pointer-events-none" />
-      <div className="absolute top-0 bottom-0 -right-6 md:right-0 w-12 md:w-32 bg-gradient-to-l from-[#080808] via-[#080808]/80 to-transparent z-10 pointer-events-none" />
+      {showGradient && (
+        <>
+          <div className="absolute top-0 bottom-0 -left-6 md:left-0 w-12 md:w-32 bg-gradient-to-r from-[#080808] via-[#080808]/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute top-0 bottom-0 -right-6 md:right-0 w-12 md:w-32 bg-gradient-to-l from-[#080808] via-[#080808]/80 to-transparent z-10 pointer-events-none" />
+        </>
+      )}
       {children}
-      <div className={`absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none z-20 ${showOnDesktop ? '' : 'md:hidden'} opacity-100 transition-opacity px-2`}>
+      <div className={`absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none z-20 ${showOnDesktop ? '' : 'md:hidden'} opacity-100 transition-opacity px-0`}>
         <button 
           onClick={() => scroll('left')}
-          className="w-10 h-10 rounded-full bg-[#080808]/80 backdrop-blur-md border border-white/20 flex items-center justify-center text-white pointer-events-auto hover:bg-[#F4CDD4] hover:text-[#080808] transition-colors shadow-lg -ml-2 md:-ml-5"
+          className="w-10 h-10 rounded-full bg-[#080808]/80 backdrop-blur-md border border-white/20 flex items-center justify-center text-white pointer-events-auto hover:bg-[#F4CDD4] hover:text-[#080808] transition-colors shadow-lg ml-2 md:-ml-5"
         >
           <ChevronLeft size={24} />
         </button>
         <button 
           onClick={() => scroll('right')}
-          className="w-10 h-10 rounded-full bg-[#080808]/80 backdrop-blur-md border border-white/20 flex items-center justify-center text-white pointer-events-auto hover:bg-[#F4CDD4] hover:text-[#080808] transition-colors shadow-lg -mr-2 md:-mr-5"
+          className="w-10 h-10 rounded-full bg-[#080808]/80 backdrop-blur-md border border-white/20 flex items-center justify-center text-white pointer-events-auto hover:bg-[#F4CDD4] hover:text-[#080808] transition-colors shadow-lg mr-2 md:-mr-5"
         >
           <ChevronRight size={24} />
         </button>
@@ -633,6 +637,17 @@ export default function DistribuidorGabriel() {
   const statsCarouselRef = useRef<HTMLDivElement>(null);
   const profitabilityCarouselRef = useRef<HTMLDivElement>(null);
   const testimonialsCarouselRef = useRef<HTMLDivElement>(null);
+  const [activeTestimonialIndex, setActiveTestimonialIndex] = useState(0);
+
+  const handleTestimonialScroll = () => {
+    if (!testimonialsCarouselRef.current) return;
+    const { scrollLeft, clientWidth } = testimonialsCarouselRef.current;
+    const itemWidth = clientWidth * (window.innerWidth < 768 ? 0.8 : 0.4);
+    const newIndex = Math.round(scrollLeft / itemWidth);
+    if (newIndex >= 0 && newIndex < 4) {
+      setActiveTestimonialIndex(newIndex);
+    }
+  };
 
   const [activeCommunityTab, setActiveCommunityTab] = useState(0);
   const productLinesCarouselRef = useRef<HTMLDivElement>(null);
@@ -752,12 +767,7 @@ export default function DistribuidorGabriel() {
                 <Logo />
               </div>
               
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6">
-                <span className="w-2 h-2 rounded-full bg-[#F4CDD4] animate-pulse" />
-                <span className="text-white text-xs font-bold tracking-wider uppercase">Seja um Distribuidor</span>
-              </div>
-              
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-[1.1] tracking-tighter uppercase">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-black mb-4 leading-[1.1] tracking-tighter uppercase">
                 SEJA UM DISTRIBUIDOR BUBBLES E DOMINE A SUA REGIÃO COM A MARCA QUE <span className="text-[#F4CDD4] drop-shadow-[0_0_10px_rgba(244,205,212,0.3)]">DEFINE O PADRÃO</span> DO COSMÉTICO PET.
               </h1>
               
@@ -1267,24 +1277,27 @@ export default function DistribuidorGabriel() {
             </h2>
           </div>
 
-          <CarouselWrapper carouselRef={testimonialsCarouselRef} showOnDesktop={true}>
+          <CarouselWrapper carouselRef={testimonialsCarouselRef} showOnDesktop={true} showGradient={true}>
             <div 
               ref={testimonialsCarouselRef}
-              className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0"
+              onScroll={handleTestimonialScroll}
+              className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-6 px-6 md:mx-0 md:px-0 items-stretch"
             >
               {[
                 { name: "MANTYPET", text: "Ser distribuidor da Bubbles tem se mostrado uma experiência extremamente enriquecedora e estratégica, marcada por aprendizado constante e resultados positivos desde o início, mesmo sem experiência prévia no segmento de banho e tosa. O suporte próximo e eficiente da equipe Bubbles, aliado à excelência dos produtos, nos transmite total segurança operacional e fortalece nossa atuação comercial, refletindo diretamente na alta aceitação e satisfação dos clientes." },
                 { name: "Assispet", text: "a Bubbles se tornou em pouco tempo um dos nossos principais fornecedores, um grande parceiro que veio pra somar trabalho e resultado em nossa distribuidora, com excelente atendimento e suporte de toda equipe, uma empresa com um leque imenso de produtos, sempre trazendo novidades ao mercado pet." },
                 { name: "SERRAPET", text: "Ser distribuidor Bubbles vai muito além de vender produtos, é viver, na prática, a transformação que eles causam. É acompanhar de perto aquele pet que chega para o banho e sai renovado, com o pelo macio, brilho evidente e um perfume que realmente marca. É ver o olhar do cliente mudar, o elogio espontâneo surgir e saber que você fez parte daquela experiência. No dia a dia, é sentir a diferença na rotina dos profissionais: produtos que rendem, que facilitam o trabalho e elevam o padrão do atendimento. É perceber que não se trata só de estética, mas de cuidado, bem-estar e valorização do serviço prestado. Ser Bubbles é criar conexão com os pet shops, com os groomers e com cada cliente que volta justamente pela experiência que teve. É ter orgulho de representar algo que entrega resultado de verdade, que fideliza e que faz o negócio crescer junto. No fim, ser distribuidor Bubbles é isso: não é só sobre o que você entrega… é sobre o que as pessoas sentem depois, pois a satisfação do cliente do meu cliente é a minha satisfação." },
                 { name: "TOPET", text: "Trabalhar com a Bubbles é ter a segurança de estar ao lado de uma marca forte, reconhecida e em constante crescimento no mercado pet. Seu investimento consistente em marketing e inovação faz com que os produtos tenham alta aceitação e desejo, criando uma conexão natural com os clientes. A cada chegada, percecebemos o quanto a marca já é aguardada — existe uma expectativa, um interesse genuíno e uma confiança construída ao longo do tempo. Isso torna nosso trabalho muito mais fluido, fortalecendo parcerias e facilitando o acesso aos clientes. Com a Bubbles, unimos credibilidade, inovação e propósito, levando aos nossos clientes não apenas produtos, mas uma experiência que já é valorizada e esperada pelo mercado." }
-            ].map((testimonial, i) => (
+            ].map((testimonial, i) => {
+              const isActive = i === activeTestimonialIndex;
+              return (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-3xl hover:border-[#F4CDD4]/30 transition-all group min-w-[80%] md:min-w-[40%] snap-center flex flex-col justify-between relative"
+                className={`bg-white/5 border border-white/10 p-6 md:p-8 rounded-3xl hover:border-[#F4CDD4]/30 transition-all duration-500 group min-w-[80%] md:min-w-[40%] snap-center flex flex-col justify-between relative h-full ${isActive ? 'opacity-100' : 'opacity-50'}`}
               >
                 <div className="absolute top-4 right-6 text-[#F4CDD4]/10 group-hover:text-[#F4CDD4]/20 transition-colors">
                   <span className="text-6xl font-serif">"</span>
@@ -1293,7 +1306,7 @@ export default function DistribuidorGabriel() {
                   <div className="flex items-center gap-1 mb-4">
                     {[...Array(5)].map((_, i) => <Star key={i} size={10} className="fill-[#F4CDD4] text-[#F4CDD4]" />)}
                   </div>
-                  <p className="text-white/60 text-xs md:text-sm italic mb-6 leading-relaxed relative z-10">"{testimonial.text}"</p>
+                  <p className="text-white/60 text-[10px] md:text-xs italic mb-6 leading-relaxed relative z-10">"{testimonial.text}"</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div>
@@ -1306,7 +1319,8 @@ export default function DistribuidorGabriel() {
                   </div>
                 </div>
               </motion.div>
-            ))}
+            );
+            })}
             </div>
           </CarouselWrapper>
         </div>
