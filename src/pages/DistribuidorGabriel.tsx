@@ -7,6 +7,7 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { maskPhone, maskCpfCnpj, unmask } from '../utils/masks';
 
 // --- Components ---
 
@@ -370,8 +371,29 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
     targetCities: '',
     hasCnpj: '',
     hasErp: '',
-    hasInvestment: ''
+    hasInvestment: '',
+    utm_source: '',
+    utm_medium: '',
+    utm_campaign: '',
+    utm_term: '',
+    utm_content: '',
+    full_url: ''
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      const urlParams = new URLSearchParams(window.location.search);
+      setFormData(prev => ({
+        ...prev,
+        utm_source: urlParams.get('utm_source') || '',
+        utm_medium: urlParams.get('utm_medium') || '',
+        utm_campaign: urlParams.get('utm_campaign') || '',
+        utm_term: urlParams.get('utm_term') || '',
+        utm_content: urlParams.get('utm_content') || '',
+        full_url: window.location.href
+      }));
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -381,20 +403,18 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
   const isQualified = formData.hasInvestment === 'yes';
 
   const isEmailValid = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isPhoneValid = (phone: string) => phone.replace(/\D/g, '').length >= 10;
+  const isPhoneValid = (phone: string) => unmask(phone).length >= 10;
+  const isCnpjValid = (cnpj: string) => {
+    const clean = unmask(cnpj);
+    return clean.length === 11 || clean.length === 14;
+  };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 11) value = value.slice(0, 11);
-    
-    if (value.length > 2) {
-      value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
-    }
-    if (value.length > 9) {
-      value = `${value.slice(0, 9)}-${value.slice(9)}`;
-    }
-    
-    setFormData({...formData, whatsapp: value});
+    setFormData({...formData, whatsapp: maskPhone(e.target.value)});
+  };
+
+  const handleCnpjChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({...formData, cnpj: maskCpfCnpj(e.target.value)});
   };
 
   const finishForm = async () => {
@@ -408,13 +428,19 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
       const payload = {
         nome: formData.name,
         email: formData.email,
-        telefone: formData.whatsapp,
+        telefone: unmask(formData.whatsapp),
         possui_cnpj: formData.hasCnpj === 'yes' ? 'Sim' : 'Não',
         utiliza_erp: formData.hasErp === 'yes' ? 'Sim' : 'Não',
-        cnpj: formData.cnpj,
+        cnpj: unmask(formData.cnpj),
         cidade_estabelecimento: formData.city,
         cidade_atuacao: formData.targetCities,
-        investimento: formData.hasInvestment === 'yes' ? 'Acima de 5.000,00' : 'Abaixo de 5.000,00'
+        investimento: formData.hasInvestment === 'yes' ? 'Acima de 5.000,00' : 'Abaixo de 5.000,00',
+        utm_source: formData.utm_source,
+        utm_medium: formData.utm_medium,
+        utm_campaign: formData.utm_campaign,
+        utm_term: formData.utm_term,
+        utm_content: formData.utm_content,
+        full_url: formData.full_url
       };
 
       console.log("[FRONTEND] Payload mapeado para a API:", payload);
@@ -618,7 +644,7 @@ ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
                       placeholder="00.000.000/0000-00"
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors"
                       value={formData.cnpj}
-                      onChange={e => setFormData({...formData, cnpj: e.target.value})}
+                      onChange={handleCnpjChange}
                     />
                   </div>
                   <div>

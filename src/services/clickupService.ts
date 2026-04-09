@@ -12,6 +12,12 @@ export interface LeadFormData {
   cidade_atuacao?: string;
   // Campo de investimento mantido como opcional caso volte a ser usado para a regra de negócio
   investimento?: string; 
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+  full_url?: string;
 }
 
 interface ClickUpResponse {
@@ -41,6 +47,12 @@ function normalizeData(data: LeadFormData) {
     cidade_estabelecimento: sanitize(data.cidade_estabelecimento),
     cidade_atuacao: sanitize(data.cidade_atuacao),
     investimento: sanitize(data.investimento),
+    utm_source: sanitize(data.utm_source),
+    utm_medium: sanitize(data.utm_medium),
+    utm_campaign: sanitize(data.utm_campaign),
+    utm_term: sanitize(data.utm_term),
+    utm_content: sanitize(data.utm_content),
+    full_url: sanitize(data.full_url),
   };
 }
 
@@ -72,6 +84,20 @@ ${data.cidade_estabelecimento}
 
 **:earth_americas: Cidade de Atuação:**
 ${data.cidade_atuacao}
+
+**:moneybag: Capacidade de Investimento:**
+${data.investimento}
+
+---
+**Dados de Rastreamento (UTMs):**
+- **Source:** ${data.utm_source}
+- **Medium:** ${data.utm_medium}
+- **Campaign:** ${data.utm_campaign}
+- **Term:** ${data.utm_term}
+- **Content:** ${data.utm_content}
+
+**URL Completa:**
+${data.full_url}
 `.trim();
 }
 
