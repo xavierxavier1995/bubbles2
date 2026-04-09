@@ -1,4 +1,4 @@
-import { createLeadTask } from '../src/services/clickupService';
+import { createLeadTask } from '../src/services/clickupService.js';
 
 export default async function handler(req: any, res: any) {
   // Configurando CORS caso necessário
