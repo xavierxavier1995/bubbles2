@@ -61,31 +61,31 @@ function normalizeData(data: LeadFormData) {
  */
 function buildMarkdownDescription(data: ReturnType<typeof normalizeData>): string {
   return `
-**:bust_in_silhouette: Nome:**
+**👤 Nome:**
 ${data.nome}
 
-**:e-mail: E-mail:**
+**📧 E-mail:**
 ${data.email}
 
-**:iphone: Telefone/WhatsApp:**
+**📱 Telefone/WhatsApp:**
 ${data.telefone}
 
-**:office: Possui CNPJ?**
+**🏢 Possui CNPJ?**
 ${data.possui_cnpj}
 
-**:id: CNPJ:**
+**🆔 CNPJ:**
 ${data.cnpj}
 
-**:receipt: Utiliza ERP?**
+**🧾 Utiliza ERP?**
 ${data.utiliza_erp}
 
-**:round_pushpin: Cidade do Estabelecimento:**
+**📍 Cidade do Estabelecimento:**
 ${data.cidade_estabelecimento}
 
-**:earth_americas: Cidade de Atuação:**
+**🌎 Cidade de Atuação:**
 ${data.cidade_atuacao}
 
-**:moneybag: Capacidade de Investimento:**
+**💰 Capacidade de Investimento:**
 ${data.investimento}
 
 ---
