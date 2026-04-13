@@ -477,7 +477,7 @@ CNPJ: ${formData.cnpj}
 Cidade: ${formData.city}
 Cidades de Atendimento: ${formData.targetCities}
 ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-      window.open(`https://wa.me/5514997646454?text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://wa.me/5514997018754?text=${encodeURIComponent(message)}`, '_blank');
     }
     onClose();
     setStep(1);
