@@ -542,6 +542,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
                   <div>
                     <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 block">Nome Completo</label>
                     <input 
+                      id="rd-text_field-m4slen95"
                       type="text" 
                       placeholder="Ex: Gabriel Silva"
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors"
@@ -553,6 +554,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
                     <div>
                       <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 block">E-mail Corporativo</label>
                       <input 
+                        id="rd-email_field-m4slen96"
                         type="email" 
                         placeholder="seu@email.com"
                         className={`w-full bg-white/5 border ${formData.email && !isEmailValid(formData.email) ? 'border-red-500' : 'border-white/10'} rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors`}
@@ -566,6 +568,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
                     <div>
                       <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 block">Seu WhatsApp</label>
                       <input 
+                        id="rd-phone_field-m4slen97"
                         type="tel" 
                         placeholder="(00) 00000-0000"
                         className={`w-full bg-white/5 border ${formData.whatsapp && !isPhoneValid(formData.whatsapp) ? 'border-red-500' : 'border-white/10'} rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors`}

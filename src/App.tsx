@@ -15,6 +15,7 @@ export default function App() {
         <Route path="/sitemap" element={<Layout><Sitemap /></Layout>} />
         <Route path="/design-system-docs" element={<Layout><DesignSystemDocs /></Layout>} />
         <Route path="/distribuidor-gabriel" element={<DistribuidorGabriel />} />
+        <Route path="/petshop" element={<Navigate to="/" replace />} />
       </Routes>
       <SpeedInsights />
     </Router>

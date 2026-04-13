@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/petshop",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
