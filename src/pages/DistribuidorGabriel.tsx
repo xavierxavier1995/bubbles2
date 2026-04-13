@@ -472,12 +472,26 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
       // Disparar evento de conversão apenas no redirecionamento para WhatsApp
       try {
         (window as any).dataLayer = (window as any).dataLayer || [];
+        
+        // Evento Personalizado solicitado pelo usuário
+        (window as any).dataLayer.push({
+          event: 'form_submit',
+          form_name: 'candidatura_distribuidor',
+          is_qualified: 'sim',
+          // Incluindo dados para facilitar a captura direta se necessário
+          email: formData.email,
+          phone: unmask(formData.whatsapp),
+          name: formData.name
+        });
+
+        // Mantendo o gtm.formSubmit para compatibilidade com gatilhos nativos
         (window as any).dataLayer.push({
           event: 'gtm.formSubmit',
           form_name: 'candidatura_distribuidor',
           is_qualified: 'sim'
         });
-        console.log("[FRONTEND] Evento gtm.formSubmit enviado (Conversão WhatsApp)");
+
+        console.log("[FRONTEND] Eventos form_submit e gtm.formSubmit enviados (Conversão WhatsApp)");
       } catch (e) {
         console.error("[FRONTEND] Erro ao enviar para o dataLayer:", e);
       }
@@ -1296,8 +1310,8 @@ export default function DistribuidorGabriel() {
                   <stat.icon size={16} className="text-[#F4CDD4] group-hover:text-[#080808] transition-colors duration-500" />
                 </div>
                 <p className="text-lg font-black text-white mb-0.5 tracking-tight">{stat.val}</p>
-                <p className="text-[#F4CDD4] text-[7px] font-black uppercase tracking-widest mb-0.5">{stat.label}</p>
-                <p className="text-white/40 text-[6px] font-bold uppercase tracking-tighter">{stat.desc}</p>
+                <p className="text-[#F4CDD4] text-[10px] font-black uppercase tracking-widest mb-0.5">{stat.label}</p>
+                <p className="text-white/40 text-[9px] font-bold uppercase tracking-tighter">{stat.desc}</p>
               </motion.div>
             ))}
             </div>
