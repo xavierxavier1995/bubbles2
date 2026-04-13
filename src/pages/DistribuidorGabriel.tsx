@@ -464,14 +464,34 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
         // Envio de evento para o DataLayer (Google Tag Manager)
         try {
           (window as any).dataLayer = (window as any).dataLayer || [];
+          
+          // Extração de Nome e Sobrenome
+          const nameParts = formData.name.trim().split(/\s+/);
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.slice(1).join(' ') || '';
+
+          // Evento de Conversão (Seguindo a sugestão do Claude para Conversões Avançadas)
           (window as any).dataLayer.push({
-            event: 'form_submit',
+            event: 'form_submission',
             form_name: 'candidatura_distribuidor',
             is_qualified: isQualified ? 'sim' : 'nao',
-            lead_email: formData.email,
-            lead_phone: unmask(formData.whatsapp)
+            firstName: firstName,
+            lastName: lastName,
+            email: formData.email,
+            phone: unmask(formData.whatsapp)
           });
-          console.log("[FRONTEND] Evento form_submit enviado para o dataLayer");
+
+          // Evento Padrão do GTM (gtm.formSubmit) para gatilhos nativos
+          (window as any).dataLayer.push({
+            event: 'gtm.formSubmit',
+            'gtm.elementId': 'form-distribuidor',
+            'gtm.elementClasses': 'form-bubbles-distribuidor',
+            'gtm.element': document.getElementById('form-distribuidor'),
+            form_name: 'candidatura_distribuidor',
+            is_qualified: isQualified ? 'sim' : 'nao'
+          });
+
+          console.log("[FRONTEND] Eventos de conversão enviados para o dataLayer (form_submission e gtm.formSubmit)");
         } catch (e) {
           console.error("[FRONTEND] Erro ao enviar para o dataLayer:", e);
         }
@@ -527,7 +547,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
           />
         </div>
 
-        <div className="p-8 md:p-12">
+        <form id="form-distribuidor" className="p-8 md:p-12" onSubmit={(e) => e.preventDefault()}>
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div 
@@ -741,7 +761,11 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
                 <div className="flex gap-4">
                   <button onClick={handlePrev} disabled={isSubmitting} className="flex-1 bg-white/5 text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors disabled:opacity-50">Voltar</button>
                   <button 
-                    onClick={finishForm}
+                    type="submit"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      finishForm();
+                    }}
                     disabled={!formData.hasInvestment || isSubmitting}
                     className="flex-[2] bg-[#F4CDD4] text-[#080808] py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform disabled:opacity-50 shadow-[0_0_20px_rgba(244,205,212,0.2)] flex items-center justify-center gap-2 group relative"
                   >
@@ -757,7 +781,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </form>
       </motion.div>
     </div>
   );
