@@ -460,6 +460,21 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
         console.error("[FRONTEND] Erro retornado pela API:", result);
       } else {
         console.log("[FRONTEND] Lead enviado com sucesso para o ClickUp!");
+        
+        // Envio de evento para o DataLayer (Google Tag Manager)
+        try {
+          (window as any).dataLayer = (window as any).dataLayer || [];
+          (window as any).dataLayer.push({
+            event: 'form_submit',
+            form_name: 'candidatura_distribuidor',
+            is_qualified: isQualified ? 'sim' : 'nao',
+            lead_email: formData.email,
+            lead_phone: unmask(formData.whatsapp)
+          });
+          console.log("[FRONTEND] Evento form_submit enviado para o dataLayer");
+        } catch (e) {
+          console.error("[FRONTEND] Erro ao enviar para o dataLayer:", e);
+        }
       }
 
     } catch (error) {
@@ -754,6 +769,13 @@ export default function DistribuidorGabriel() {
 
   const handleOpenForm = React.useCallback(() => {
     setIsFormOpen(true);
+    try {
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push({
+        event: 'form_open',
+        form_name: 'candidatura_distribuidor'
+      });
+    } catch (e) {}
   }, []);
 
   const statsCarouselRef = useRef<HTMLDivElement>(null);
