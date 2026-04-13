@@ -469,14 +469,16 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
     }
 
     if (isQualified) {
-      const message = `Olá! Me candidatei como distribuidor Bubbles®. 
-Nome: ${formData.name}
-Email: ${formData.email}
-WhatsApp: ${formData.whatsapp}
-CNPJ: ${formData.cnpj}
-Cidade: ${formData.city}
-Cidades de Atendimento: ${formData.targetCities}
-ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      const message = `Olá! Me candidatei como distribuidor Bubbles®. 👤
+
+👤 *Nome:* ${formData.name}
+📧 *Email:* ${formData.email}
+📱 *WhatsApp:* ${formData.whatsapp}
+🆔 *CNPJ:* ${formData.cnpj}
+📍 *Cidade:* ${formData.city}
+🌎 *Cidades de Atendimento:* ${formData.targetCities}
+
+🔢 *ID da Candidatura:* ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
       window.open(`https://wa.me/5514997018754?text=${encodeURIComponent(message)}`, '_blank');
     }
     onClose();

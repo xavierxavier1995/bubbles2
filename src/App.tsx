@@ -1,4 +1,5 @@
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/Layout';
 import DesignSystemDocs from './pages/DesignSystemDocs';
 import DistribuidorGabriel from './pages/DistribuidorGabriel';
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/design-system-docs" element={<Layout><DesignSystemDocs /></Layout>} />
         <Route path="/distribuidor-gabriel" element={<DistribuidorGabriel />} />
       </Routes>
+      <SpeedInsights />
     </Router>
   );
 }
