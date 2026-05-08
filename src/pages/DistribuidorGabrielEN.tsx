@@ -463,7 +463,9 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
 *Email:* ${formData.email}
 *WhatsApp:* ${formData.whatsapp}
 *City:* ${formData.city}
-*Target Cities:* ${formData.targetCities}`;
+*Target Cities:* ${formData.targetCities}
+*Business Model:* ${formData.businessModel}
+*Professional Brands:* ${formData.previousBrands || 'Not informed'}`;
       window.open(`https://wa.me/5514997018754?text=${encodeURIComponent(message)}`, '_blank');
     }
     onClose();

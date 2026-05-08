@@ -517,6 +517,8 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
 *CNPJ:* ${formData.cnpj}
 *Cidade:* ${formData.city}
 *Cidades de Atendimento:* ${formData.targetCities}
+*Modelo de Negócio:* ${formData.businessModel}
+*Marcas Profissionais:* ${formData.previousBrands || 'Não informado'}
 
 *ID da Candidatura:* ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
       window.open(`https://wa.me/5514997018754?text=${encodeURIComponent(message)}`, '_blank');
