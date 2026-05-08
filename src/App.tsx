@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/Layout';
 import DesignSystemDocs from './pages/DesignSystemDocs';
 import DistribuidorGabriel from './pages/DistribuidorGabriel';
+import DistribuidorGabrielEN from './pages/DistribuidorGabrielEN';
 import Sitemap from './pages/Sitemap';
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/sitemap" element={<Layout><Sitemap /></Layout>} />
         <Route path="/design-system-docs" element={<Layout><DesignSystemDocs /></Layout>} />
         <Route path="/distribuidor-gabriel" element={<DistribuidorGabriel />} />
+        <Route path="/distribuidor-en" element={<DistribuidorGabrielEN />} />
         <Route path="/petshop" element={<Navigate to="/" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -372,6 +372,8 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
     hasCnpj: '',
     hasErp: '',
     hasInvestment: '',
+    businessModel: '',
+    previousBrands: '',
     utm_source: '',
     utm_medium: '',
     utm_campaign: '',
@@ -434,6 +436,8 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
         cnpj: unmask(formData.cnpj),
         cidade_estabelecimento: formData.city,
         cidade_atuacao: formData.targetCities,
+        modelo_negocio: formData.businessModel,
+        marcas_anteriores: formData.previousBrands,
         investimento: formData.hasInvestment === 'yes' ? 'Acima de 5.000,00' : 'Abaixo de 5.000,00',
         utm_source: formData.utm_source,
         utm_medium: formData.utm_medium,
@@ -460,6 +464,15 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
         console.error("[FRONTEND] Erro retornado pela API:", result);
       } else {
         console.log("[FRONTEND] Lead enviado com sucesso para o ClickUp!");
+        
+        // Google Tag Manager Event
+        if (typeof window !== 'undefined' && (window as any).dataLayer) {
+          (window as any).dataLayer.push({
+            event: 'lead_form_submitted',
+            form_type: 'distribuidor',
+            language: 'pt-br'
+          });
+        }
       }
 
     } catch (error) {
@@ -523,7 +536,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
         <div className="p-8 border-b border-white/5 flex justify-between items-center bg-[#1A1A1A]">
           <div>
             <h3 className="text-xl font-black text-white tracking-tight">Candidatura de Distribuidor</h3>
-            <p className="text-white/40 text-[10px] uppercase tracking-widest mt-1 font-bold">Passo {step} de 4</p>
+            <p className="text-white/40 text-[10px] uppercase tracking-widest mt-1 font-bold">Passo {step} de 5</p>
           </div>
           <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
             <X size={24} />
@@ -535,7 +548,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
           <motion.div 
             className="h-full bg-[#F4CDD4] shadow-[0_0_10px_rgba(244,205,212,0.5)]"
             initial={{ width: '0%' }}
-            animate={{ width: `${(step / 4) * 100}%` }}
+            animate={{ width: `${(step / 5) * 100}%` }}
           />
         </div>
 
@@ -716,6 +729,58 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
             {step === 4 && (
               <motion.div 
                 key="step4"
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -20, opacity: 0 }}
+                className="space-y-6"
+              >
+                <h4 className="text-xl font-black text-white mb-8 tracking-tight">Modelo de Negócio</h4>
+                <div className="space-y-6">
+                  <div>
+                    <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-4 block">Como você atua hoje?</label>
+                    <div className="grid grid-cols-1 gap-2">
+                      {[
+                        { id: 'fisico', label: 'Distribuição Física' },
+                        { id: 'ecommerce', label: 'E-commerce' },
+                        { id: 'ambos', label: 'Ambos (Físico e E-commerce)' }
+                      ].map(opt => (
+                        <button 
+                          key={opt.id}
+                          onClick={() => setFormData({...formData, businessModel: opt.label})}
+                          className={`py-4 px-6 rounded-xl border text-left font-bold uppercase tracking-widest text-[10px] transition-all flex items-center justify-between ${formData.businessModel === opt.label ? 'bg-[#F4CDD4] text-[#080808] border-[#F4CDD4]' : 'bg-white/5 text-white border-white/10 hover:border-white/30'}`}
+                        >
+                          {opt.label}
+                          {formData.businessModel === opt.label && <CheckCircle size={16} />}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 block">Já trabalha com alguma marca de cosmética pet? (Opcional)</label>
+                    <input 
+                      type="text" 
+                      placeholder="Ex: Marca X, Marca Y ou Não trabalho"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors"
+                      value={formData.previousBrands}
+                      onChange={e => setFormData({...formData, previousBrands: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <button onClick={handlePrev} className="flex-1 bg-white/5 text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors">Voltar</button>
+                  <button 
+                    onClick={handleNext}
+                    className="flex-[2] bg-[#F4CDD4] text-[#080808] py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 group"
+                  >
+                    Próxima Etapa <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {step === 5 && (
+              <motion.div 
+                key="step5"
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -20, opacity: 0 }}

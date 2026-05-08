@@ -10,6 +10,8 @@ export interface LeadFormData {
   cnpj?: string;
   cidade_estabelecimento?: string;
   cidade_atuacao?: string;
+  modelo_negocio?: string;
+  marcas_anteriores?: string;
   // Campo de investimento mantido como opcional caso volte a ser usado para a regra de negócio
   investimento?: string; 
   utm_source?: string;
@@ -18,6 +20,7 @@ export interface LeadFormData {
   utm_term?: string;
   utm_content?: string;
   full_url?: string;
+  language?: string;
 }
 
 interface ClickUpResponse {
@@ -46,6 +49,8 @@ function normalizeData(data: LeadFormData) {
     cnpj: sanitize(data.cnpj),
     cidade_estabelecimento: sanitize(data.cidade_estabelecimento),
     cidade_atuacao: sanitize(data.cidade_atuacao),
+    modelo_negocio: sanitize(data.modelo_negocio),
+    marcas_anteriores: sanitize(data.marcas_anteriores),
     investimento: sanitize(data.investimento),
     utm_source: sanitize(data.utm_source),
     utm_medium: sanitize(data.utm_medium),
@@ -53,6 +58,7 @@ function normalizeData(data: LeadFormData) {
     utm_term: sanitize(data.utm_term),
     utm_content: sanitize(data.utm_content),
     full_url: sanitize(data.full_url),
+    language: sanitize(data.language),
   };
 }
 
@@ -70,6 +76,9 @@ ${data.email}
 **Telefone/WhatsApp:**
 ${data.telefone}
 
+**Idioma do Lead:**
+${data.language === 'en' ? 'Inglês' : 'Português'}
+
 **Possui CNPJ?**
 ${data.possui_cnpj}
 
@@ -84,6 +93,12 @@ ${data.cidade_estabelecimento}
 
 **Cidade de Atuação:**
 ${data.cidade_atuacao}
+
+**Modelo de Negócio:**
+${data.modelo_negocio}
+
+**Marcas Profissionais que já trabalha:**
+${data.marcas_anteriores}
 
 **Capacidade de Investimento:**
 ${data.investimento}

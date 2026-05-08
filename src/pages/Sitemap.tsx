@@ -72,8 +72,59 @@ export default function Sitemap() {
             title="Distribuidor (Gabriel)" 
             description="Landing Page Ultra Dark Industrial focada em captação de distribuidores de elite."
             icon={FileText}
-            badge="Premium"
+            badge="Live"
           />
+          <RouteCard 
+            to="/distribuidor-en" 
+            title="Distributor (English)" 
+            description="English version of the Ultra Dark Industrial landing page for international reach."
+            icon={FileText}
+            badge="En"
+          />
+          <a href="/distribuidor-export.html" target="_blank" className="group block">
+            <div className="bg-brand-pink/5 border border-brand-pink/20 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
+              <div className="flex justify-between items-start mb-4">
+                <div className="w-12 h-12 bg-brand-pink/20 rounded-xl flex items-center justify-center text-brand-pink group-hover:bg-brand-pink group-hover:text-white transition-colors">
+                  <ExternalLink size={24} />
+                </div>
+                <span className="bg-brand-pink text-brand-dark text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest">
+                  Export PT
+                </span>
+              </div>
+              <h3 className="text-lg font-black mb-2 group-hover:text-brand-pink transition-colors flex items-center gap-2">
+                HTML PT <ArrowRight size={16} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+              </h3>
+              <p className="text-muted text-xs leading-relaxed flex-grow">
+                Versão "Pure HTML" gerada com todos os assets e scripts embutidos (Português).
+              </p>
+              <div className="mt-6 pt-4 border-t border-brand-pink/10 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-muted">
+                <span>File: distribuidor-export.html</span>
+                <ExternalLink size={12} />
+              </div>
+            </div>
+          </a>
+          <a href="/distribuidor-export-en.html" target="_blank" className="group block">
+            <div className="bg-brand-pink/5 border border-brand-pink/20 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
+              <div className="flex justify-between items-start mb-4">
+                <div className="w-12 h-12 bg-brand-pink/20 rounded-xl flex items-center justify-center text-brand-pink group-hover:bg-brand-pink group-hover:text-white transition-colors">
+                  <ExternalLink size={24} />
+                </div>
+                <span className="bg-brand-pink text-brand-dark text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest">
+                  Export EN
+                </span>
+              </div>
+              <h3 className="text-lg font-black mb-2 group-hover:text-brand-pink transition-colors flex items-center gap-2">
+                HTML EN Complete <ArrowRight size={16} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+              </h3>
+              <p className="text-muted text-xs leading-relaxed flex-grow">
+                Full "Pure HTML" version in English, including all sections, calculators and interactive components.
+              </p>
+              <div className="mt-6 pt-4 border-t border-brand-pink/10 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-muted">
+                <span>File: distribuidor-export-en.html</span>
+                <ExternalLink size={12} />
+              </div>
+            </div>
+          </a>
         </div>
 
         <footer className="mt-20 pt-10 border-t border-[#E5E5E5] text-center">
