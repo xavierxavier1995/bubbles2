@@ -521,7 +521,13 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
 *Marcas Profissionais:* ${formData.previousBrands || 'Não informado'}
 
 *ID da Candidatura:* ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-      window.open(`https://wa.me/5514997018754?text=${encodeURIComponent(message)}`, '_blank');
+
+      // Programação para troca de número em 08/06/2026 às 23:59h (Horário de Brasília)
+      const targetTime = new Date('2026-06-08T23:59:00-03:00').getTime();
+      const now = Date.now();
+      const whatsappNumber = now >= targetTime ? '5514996312932' : '5514997018754';
+
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
     }
     onClose();
     setStep(1);
