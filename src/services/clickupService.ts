@@ -123,7 +123,38 @@ export async function createLeadTask(rawFormData: LeadFormData): Promise<ClickUp
   // 1. Normaliza os dados
   const leadData = normalizeData(rawFormData);
 
-  // 2. Aplica Regra de Negócio Condicional
+  // 2. Envia os dados para o Sellum Webhook (Integrado de forma independente)
+  try {
+    const sellumPayload = {
+      companyName: leadData.cnpj && leadData.cnpj !== 'Não informado' ? leadData.cnpj : leadData.nome,
+      contactName: leadData.nome,
+      email: leadData.email,
+      phone: leadData.telefone,
+      source: leadData.utm_source && leadData.utm_source !== 'Não informado' ? leadData.utm_source : 'Formulário de Captação'
+    };
+
+    console.log("[SELLUM WEBHOOK] Enviando payload:", JSON.stringify(sellumPayload, null, 2));
+
+    const sellumResponse = await fetch('https://api-admin.sellum.app/v1/public/crm/webhooks/captacao-237b5035c0', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer crm_15eb27da51aa452be74dfe4512570c8a7e16acd25f9600a0',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(sellumPayload)
+    });
+
+    if (sellumResponse.ok) {
+      console.log("[SELLUM WEBHOOK] Enviado com sucesso!", sellumResponse.status);
+    } else {
+      const errorText = await sellumResponse.text();
+      console.error("[SELLUM WEBHOOK] Falha ao enviar para o Sellum:", sellumResponse.status, errorText);
+    }
+  } catch (sellumError: any) {
+    console.error("[SELLUM WEBHOOK] Erro ao enviar dados para o Sellum:", sellumError.message);
+  }
+
+  // 3. Aplica Regra de Negócio Condicional
   // Adaptado: Se o investimento for "Abaixo de 5.000,00", não cria a tarefa.
   // (Caso o campo não exista no form atual, essa regra simplesmente não será ativada, 
   // mas a lógica fica pronta conforme solicitado).
@@ -135,7 +166,7 @@ export async function createLeadTask(rawFormData: LeadFormData): Promise<ClickUp
     };
   }
 
-  // 3. Prepara as configurações (usando variáveis de ambiente)
+  // 4. Prepara as configurações (usando variáveis de ambiente)
   const CLICKUP_TOKEN = process.env.CLICKUP_API_TOKEN;
   const LIST_ID = process.env.CLICKUP_LIST_ID;
   const DEFAULT_STATUS = process.env.CLICKUP_DEFAULT_STATUS || "NOVOS";
@@ -147,7 +178,7 @@ export async function createLeadTask(rawFormData: LeadFormData): Promise<ClickUp
     throw new Error("Configurações do ClickUp (Token ou List ID) ausentes no servidor.");
   }
 
-  // 4. Monta o Payload
+  // 5. Monta o Payload
   const description = buildMarkdownDescription(leadData);
   
   const payload = {
@@ -159,7 +190,7 @@ export async function createLeadTask(rawFormData: LeadFormData): Promise<ClickUp
 
   console.log("[CLICKUP SERVICE] Enviando payload para o ClickUp:", JSON.stringify(payload, null, 2));
 
-  // 5. Faz a requisição para a API do ClickUp
+  // 6. Faz a requisição para a API do ClickUp
   try {
     const response = await fetch(`https://api.clickup.com/api/v2/list/${LIST_ID}/task`, {
       method: 'POST',
