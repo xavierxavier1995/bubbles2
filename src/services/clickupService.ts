@@ -21,6 +21,7 @@ export interface LeadFormData {
   utm_content?: string;
   full_url?: string;
   language?: string;
+  candidacyId?: string;
 }
 
 interface ClickUpResponse {
@@ -59,6 +60,7 @@ function normalizeData(data: LeadFormData) {
     utm_content: sanitize(data.utm_content),
     full_url: sanitize(data.full_url),
     language: sanitize(data.language),
+    candidacyId: sanitize(data.candidacyId),
   };
 }
 
@@ -126,11 +128,29 @@ export async function createLeadTask(rawFormData: LeadFormData): Promise<ClickUp
   // 2. Envia os dados para o Sellum Webhook (Integrado de forma independente)
   try {
     const sellumPayload = {
+      // Campos padrão
       companyName: leadData.cnpj && leadData.cnpj !== 'Não informado' ? leadData.cnpj : leadData.nome,
       contactName: leadData.nome,
       email: leadData.email,
       phone: leadData.telefone,
-      source: leadData.utm_source && leadData.utm_source !== 'Não informado' ? leadData.utm_source : 'Formulário de Captação'
+      source: leadData.utm_source && leadData.utm_source !== 'Não informado' ? leadData.utm_source : 'Formulário de Captação',
+      
+      // Todos os outros campos enviados do formulário
+      id: leadData.candidacyId,
+      possui_cnpj: leadData.possui_cnpj,
+      cnpj: leadData.cnpj,
+      utiliza_erp: leadData.utiliza_erp,
+      cidade_estabelecimento: leadData.cidade_estabelecimento,
+      cidade_atuacao: leadData.cidade_atuacao,
+      modelo_negocio: leadData.modelo_negocio,
+      marcas_anteriores: leadData.marcas_anteriores,
+      investimento: leadData.investimento,
+      language: leadData.language,
+      utm_medium: leadData.utm_medium,
+      utm_campaign: leadData.utm_campaign,
+      utm_term: leadData.utm_term,
+      utm_content: leadData.utm_content,
+      full_url: leadData.full_url
     };
 
     console.log("[SELLUM WEBHOOK] Enviando payload:", JSON.stringify(sellumPayload, null, 2));

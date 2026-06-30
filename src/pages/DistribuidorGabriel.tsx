@@ -425,6 +425,8 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
     console.log("[FRONTEND] Iniciando envio do formulário...");
     console.log("[FRONTEND] Dados do formulário:", formData);
 
+    const candidacyId = Math.random().toString(36).substr(2, 9).toUpperCase();
+
     try {
       // Mapeando os dados do formData para o formato esperado pelo backend
       const payload = {
@@ -444,7 +446,8 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
         utm_campaign: formData.utm_campaign,
         utm_term: formData.utm_term,
         utm_content: formData.utm_content,
-        full_url: formData.full_url
+        full_url: formData.full_url,
+        candidacyId: candidacyId
       };
 
       console.log("[FRONTEND] Payload mapeado para a API:", payload);
@@ -463,7 +466,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
       if (!response.ok) {
         console.error("[FRONTEND] Erro retornado pela API:", result);
       } else {
-        console.log("[FRONTEND] Lead enviado com sucesso para o ClickUp!");
+        console.log("[FRONTEND] Lead enviado com sucesso para o ClickUp e Sellum!");
         
         // Google Tag Manager Event
         if (typeof window !== 'undefined' && (window as any).dataLayer) {
@@ -520,7 +523,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
 *Modelo de Negócio:* ${formData.businessModel}
 *Marcas Profissionais:* ${formData.previousBrands || 'Não informado'}
 
-*ID da Candidatura:* ${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+*ID da Candidatura:* ${candidacyId}`;
 
       // Programação para troca de número em 08/06/2026 às 23:59h (Horário de Brasília)
       const targetTime = new Date('2026-06-08T23:59:00-03:00').getTime();
