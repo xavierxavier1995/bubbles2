@@ -362,6 +362,8 @@ const ExitIntentPopup = ({ isOpen, onClose, onOpenForm }: { isOpen: boolean, onC
 const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [lastCandidacyId, setLastCandidacyId] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -379,8 +381,18 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
     utm_campaign: '',
     utm_term: '',
     utm_content: '',
+    fbclid: '',
+    gclid: '',
     full_url: ''
   });
+
+  const handleClose = () => {
+    onClose();
+    setTimeout(() => {
+      setStep(1);
+      setIsSuccess(false);
+    }, 300);
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -392,6 +404,8 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
         utm_campaign: urlParams.get('utm_campaign') || '',
         utm_term: urlParams.get('utm_term') || '',
         utm_content: urlParams.get('utm_content') || '',
+        fbclid: urlParams.get('fbclid') || '',
+        gclid: urlParams.get('gclid') || '',
         full_url: window.location.href
       }));
     }
@@ -406,9 +420,12 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
 
   const isEmailValid = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isPhoneValid = (phone: string) => unmask(phone).length >= 10;
-  const isCnpjValid = (cnpj: string) => {
-    const clean = unmask(cnpj);
-    return clean.length === 11 || clean.length === 14;
+  const isCnpjCpfValid = (value: string) => {
+    const clean = unmask(value);
+    if (formData.hasCnpj === 'no') {
+      return clean.length === 11; // CPF
+    }
+    return clean.length === 14; // CNPJ
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -426,6 +443,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
     console.log("[FRONTEND] Dados do formulário:", formData);
 
     const candidacyId = Math.random().toString(36).substr(2, 9).toUpperCase();
+    setLastCandidacyId(candidacyId);
 
     try {
       // Mapeando os dados do formData para o formato esperado pelo backend
@@ -447,7 +465,9 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
         utm_term: formData.utm_term,
         utm_content: formData.utm_content,
         full_url: formData.full_url,
-        candidacyId: candidacyId
+        candidacyId: candidacyId,
+        fbclid: formData.fbclid,
+        gclid: formData.gclid
       };
 
       console.log("[FRONTEND] Payload mapeado para a API:", payload);
@@ -485,7 +505,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
     }
 
     if (isQualified) {
-      // Disparar evento de conversão apenas no redirecionamento para WhatsApp
+      // Disparar evento de conversão
       try {
         (window as any).dataLayer = (window as any).dataLayer || [];
         
@@ -507,33 +527,12 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
           is_qualified: 'sim'
         });
 
-        console.log("[FRONTEND] Eventos form_submit e gtm.formSubmit enviados (Conversão WhatsApp)");
+        console.log("[FRONTEND] Eventos form_submit e gtm.formSubmit enviados (Sucesso)");
       } catch (e) {
         console.error("[FRONTEND] Erro ao enviar para o dataLayer:", e);
       }
-
-      const message = `Olá! Me candidatei como distribuidor Bubbles.
-
-*Nome:* ${formData.name}
-*Email:* ${formData.email}
-*WhatsApp:* ${formData.whatsapp}
-*CNPJ:* ${formData.cnpj}
-*Cidade:* ${formData.city}
-*Cidades de Atendimento:* ${formData.targetCities}
-*Modelo de Negócio:* ${formData.businessModel}
-*Marcas Profissionais:* ${formData.previousBrands || 'Não informado'}
-
-*ID da Candidatura:* ${candidacyId}`;
-
-      // Programação para troca de número em 08/06/2026 às 23:59h (Horário de Brasília)
-      const targetTime = new Date('2026-06-08T23:59:00-03:00').getTime();
-      const now = Date.now();
-      const whatsappNumber = now >= targetTime ? '5514996312932' : '5514997018754';
-
-      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
     }
-    onClose();
-    setStep(1);
+    setIsSuccess(true);
   };
 
   return (
@@ -546,26 +545,63 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
         {/* Header */}
         <div className="p-8 border-b border-white/5 flex justify-between items-center bg-[#1A1A1A]">
           <div>
-            <h3 className="text-xl font-black text-white tracking-tight">Candidatura de Distribuidor</h3>
-            <p className="text-white/40 text-[10px] uppercase tracking-widest mt-1 font-bold">Passo {step} de 5</p>
+            <h3 className="text-xl font-black text-white tracking-tight">
+              {isSuccess ? 'Candidatura Recebida' : 'Candidatura de Distribuidor'}
+            </h3>
+            {!isSuccess && (
+              <p className="text-white/40 text-[10px] uppercase tracking-widest mt-1 font-bold">Passo {step} de 5</p>
+            )}
           </div>
-          <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
+          <button onClick={handleClose} className="text-white/40 hover:text-white transition-colors">
             <X size={24} />
           </button>
         </div>
 
         {/* Progress Bar */}
-        <div className="h-1 bg-white/5 w-full">
-          <motion.div 
-            className="h-full bg-[#F4CDD4] shadow-[0_0_10px_rgba(244,205,212,0.5)]"
-            initial={{ width: '0%' }}
-            animate={{ width: `${(step / 5) * 100}%` }}
-          />
-        </div>
+        {!isSuccess && (
+          <div className="h-1 bg-white/5 w-full">
+            <motion.div 
+              className="h-full bg-[#F4CDD4] shadow-[0_0_10px_rgba(244,205,212,0.5)]"
+              initial={{ width: '0%' }}
+              animate={{ width: `${(step / 5) * 100}%` }}
+            />
+          </div>
+        )}
 
         <div id="form-distribuidor" className="p-8 md:p-12">
           <AnimatePresence mode="wait">
-            {step === 1 && (
+            {isSuccess ? (
+              <motion.div
+                key="success"
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="space-y-6 text-center py-4"
+              >
+                <div className="w-16 h-16 bg-[#F4CDD4]/10 text-[#F4CDD4] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(244,205,212,0.2)] animate-pulse">
+                  <CheckCircle size={36} className="text-[#F4CDD4]" />
+                </div>
+                
+                <h4 className="text-2xl font-black text-white tracking-tight">Candidatura Enviada!</h4>
+                
+                <p className="text-white/70 text-sm max-w-md mx-auto leading-relaxed">
+                  Agradecemos o seu interesse em se tornar um distribuidor autorizado Bubbles®.
+                  <br /><br />
+                  Nossa equipe de expansão já recebeu o seu cadastro comercial e técnico com sucesso (ID: <span className="text-[#F4CDD4] font-mono">{lastCandidacyId}</span>). Em breve, um dos nossos atendentes entrará em contato com você diretamente para prosseguir com o seu credenciamento.
+                </p>
+
+                <div className="pt-6">
+                  <button 
+                    onClick={handleClose}
+                    className="w-full max-w-xs bg-[#F4CDD4] text-[#080808] py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(244,205,212,0.2)]"
+                  >
+                    Fechar e Voltar
+                  </button>
+                </div>
+              </motion.div>
+            ) : (
+              <>
+                {step === 1 && (
               <motion.div 
                 key="step1"
                 initial={{ x: 20, opacity: 0 }}
@@ -692,16 +728,25 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
               >
                 <h4 className="text-xl font-black text-white mb-8 tracking-tight">Localização e Identificação</h4>
                 <div className="space-y-4">
-                  <p className="text-white/60 text-sm mb-4">Para prosseguir, precisamos saber os dados da sua empresa.</p>
+                  <p className="text-white/60 text-sm mb-4">
+                    {formData.hasCnpj === 'no' ? 'Para prosseguir, precisamos saber os dados de identificação do distribuidor.' : 'Para prosseguir, precisamos saber os dados da sua empresa.'}
+                  </p>
                   <div>
-                    <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 block">CNPJ da Empresa</label>
+                    <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 block">
+                      {formData.hasCnpj === 'no' ? 'CPF do Distribuidor' : 'CNPJ da Empresa'}
+                    </label>
                     <input 
                       type="text" 
-                      placeholder="00.000.000/0000-00"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors"
+                      placeholder={formData.hasCnpj === 'no' ? '000.000.000-00' : '00.000.000/0000-00'}
+                      className={`w-full bg-white/5 border ${formData.cnpj && !isCnpjCpfValid(formData.cnpj) ? 'border-red-500' : 'border-white/10'} rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors`}
                       value={formData.cnpj}
                       onChange={handleCnpjChange}
                     />
+                    {formData.cnpj && !isCnpjCpfValid(formData.cnpj) && (
+                      <span className="text-red-500 text-[10px] mt-1 block">
+                        {formData.hasCnpj === 'no' ? 'CPF inválido. Deve possuir 11 dígitos.' : 'CNPJ inválido. Deve possuir 14 dígitos.'}
+                      </span>
+                    )}
                   </div>
                   <div>
                     <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 block">Qual cidade está o seu estabelecimento?</label>
@@ -728,7 +773,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
                   <button onClick={handlePrev} className="flex-1 bg-white/5 text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors">Voltar</button>
                   <button 
                     onClick={handleNext}
-                    disabled={!formData.cnpj || !formData.city || !formData.targetCities}
+                    disabled={!isCnpjCpfValid(formData.cnpj) || !formData.city || !formData.targetCities}
                     className="flex-[2] bg-[#F4CDD4] text-[#080808] py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform disabled:opacity-50 flex items-center justify-center gap-2 group"
                   >
                     Próxima Etapa <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -843,6 +888,8 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
                   </button>
                 </div>
               </motion.div>
+            )}
+              </>
             )}
           </AnimatePresence>
         </div>

@@ -22,6 +22,8 @@ export interface LeadFormData {
   full_url?: string;
   language?: string;
   candidacyId?: string;
+  fbclid?: string;
+  gclid?: string;
 }
 
 interface ClickUpResponse {
@@ -61,6 +63,8 @@ function normalizeData(data: LeadFormData) {
     full_url: sanitize(data.full_url),
     language: sanitize(data.language),
     candidacyId: sanitize(data.candidacyId),
+    fbclid: sanitize(data.fbclid),
+    gclid: sanitize(data.gclid),
   };
 }
 
@@ -112,6 +116,8 @@ ${data.investimento}
 - **Campaign:** ${data.utm_campaign}
 - **Term:** ${data.utm_term}
 - **Content:** ${data.utm_content}
+- **FBCLID:** ${data.fbclid}
+- **GCLID:** ${data.gclid}
 
 **URL Completa:**
 ${data.full_url}
@@ -150,7 +156,9 @@ export async function createLeadTask(rawFormData: LeadFormData): Promise<ClickUp
       utm_campaign: leadData.utm_campaign,
       utm_term: leadData.utm_term,
       utm_content: leadData.utm_content,
-      full_url: leadData.full_url
+      full_url: leadData.full_url,
+      fbclid: leadData.fbclid,
+      gclid: leadData.gclid
     };
 
     console.log("[SELLUM WEBHOOK] Enviando payload:", JSON.stringify(sellumPayload, null, 2));
@@ -174,7 +182,16 @@ export async function createLeadTask(rawFormData: LeadFormData): Promise<ClickUp
     console.error("[SELLUM WEBHOOK] Erro ao enviar dados para o Sellum:", sellumError.message);
   }
 
-  // 3. Aplica Regra de Negócio Condicional
+  // RETORNO ANTECIPADO: Envio para o ClickUp pausado a pedido do usuário.
+  // Foco exclusivo no envio ao Sellum.
+  console.log("[CLICKUP SERVICE] Envio para o ClickUp pausado. Retornando resposta de sucesso.");
+  return {
+    success: true,
+    status: "created",
+    message: "Lead enviado com sucesso para o Sellum Webhook. (Integração ClickUp pausada)"
+  };
+
+  // 3. Aplica Regra de Negócio Condicional (Comentado/Pausado)
   // Adaptado: Se o investimento for "Abaixo de 5.000,00", não cria a tarefa.
   // (Caso o campo não exista no form atual, essa regra simplesmente não será ativada, 
   // mas a lógica fica pronta conforme solicitado).
