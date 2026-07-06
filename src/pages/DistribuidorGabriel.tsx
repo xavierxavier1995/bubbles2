@@ -397,6 +397,9 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
   useEffect(() => {
     if (isOpen) {
       const urlParams = new URLSearchParams(window.location.search);
+      const generatedId = Math.random().toString(36).substr(2, 9).toUpperCase();
+      setLastCandidacyId(generatedId);
+      
       setFormData(prev => ({
         ...prev,
         utm_source: urlParams.get('utm_source') || '',
@@ -436,75 +439,96 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
     setFormData({...formData, cnpj: maskCpfCnpj(e.target.value)});
   };
 
+  const getWhatsAppLink = (idToUse: string) => {
+    const cid = idToUse || lastCandidacyId || 'N/A';
+    const message = `Olá! Preenchi o formulário de distribuidor Bubbles® e gostaria de comprar produtos com condições diferenciadas e exclusivas.
+
+*ID de Atendimento:* ${cid}
+*Nome:* ${formData.name}
+*E-mail:* ${formData.email}
+*WhatsApp:* ${formData.whatsapp}
+*Documento (CPF/CNPJ):* ${formData.cnpj || 'Não informado'}
+*Cidade:* ${formData.city}
+*Cidades de Atendimento:* ${formData.targetCities}
+*Modelo de Negócio:* ${formData.businessModel}
+*Trabalha com outras marcas:* ${formData.previousBrands || 'Não informado'}
+
+Quero comprar com condições exclusivas!`;
+
+    return `https://wa.me/5514996312932?text=${encodeURIComponent(message)}`;
+  };
+
   const finishForm = async () => {
     localStorage.setItem('formSubmitted', 'true');
     setIsSubmitting(true);
     console.log("[FRONTEND] Iniciando envio do formulário...");
     console.log("[FRONTEND] Dados do formulário:", formData);
 
-    const candidacyId = Math.random().toString(36).substr(2, 9).toUpperCase();
-    setLastCandidacyId(candidacyId);
-
-    try {
-      // Mapeando os dados do formData para o formato esperado pelo backend
-      const payload = {
-        nome: formData.name,
-        email: formData.email,
-        telefone: unmask(formData.whatsapp),
-        possui_cnpj: formData.hasCnpj === 'yes' ? 'Sim' : 'Não',
-        utiliza_erp: formData.hasErp === 'yes' ? 'Sim' : 'Não',
-        cnpj: unmask(formData.cnpj),
-        cidade_estabelecimento: formData.city,
-        cidade_atuacao: formData.targetCities,
-        modelo_negocio: formData.businessModel,
-        marcas_anteriores: formData.previousBrands,
-        investimento: formData.hasInvestment === 'yes' ? 'Acima de 5.000,00' : 'Abaixo de 5.000,00',
-        utm_source: formData.utm_source,
-        utm_medium: formData.utm_medium,
-        utm_campaign: formData.utm_campaign,
-        utm_term: formData.utm_term,
-        utm_content: formData.utm_content,
-        full_url: formData.full_url,
-        candidacyId: candidacyId,
-        fbclid: formData.fbclid,
-        gclid: formData.gclid
-      };
-
-      console.log("[FRONTEND] Payload mapeado para a API:", payload);
-
-      const response = await fetch('/api/leads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await response.json();
-      console.log("[FRONTEND] Resposta da API:", response.status, result);
-
-      if (!response.ok) {
-        console.error("[FRONTEND] Erro retornado pela API:", result);
-      } else {
-        console.log("[FRONTEND] Lead enviado com sucesso para o ClickUp e Sellum!");
-        
-        // Google Tag Manager Event
-        if (typeof window !== 'undefined' && (window as any).dataLayer) {
-          (window as any).dataLayer.push({
-            event: 'lead_form_submitted',
-            form_type: 'distribuidor',
-            language: 'pt-br'
-          });
-        }
-      }
-
-    } catch (error) {
-      console.error("[FRONTEND] Erro ao fazer a requisição para /api/leads:", error);
-    } finally {
-      setIsSubmitting(false);
+    const candidacyId = lastCandidacyId || Math.random().toString(36).substr(2, 9).toUpperCase();
+    if (!lastCandidacyId) {
+      setLastCandidacyId(candidacyId);
     }
 
     if (isQualified) {
+      try {
+        // Mapeando os dados do formData para o formato esperado pelo backend
+        const payload = {
+          nome: formData.name,
+          email: formData.email,
+          telefone: unmask(formData.whatsapp),
+          possui_cnpj: formData.hasCnpj === 'yes' ? 'Sim' : 'Não',
+          utiliza_erp: formData.hasErp === 'yes' ? 'Sim' : 'Não',
+          cnpj: unmask(formData.cnpj),
+          cidade_estabelecimento: formData.city,
+          cidade_atuacao: formData.targetCities,
+          modelo_negocio: formData.businessModel,
+          marcas_anteriores: formData.previousBrands,
+          investimento: formData.hasInvestment === 'yes' ? 'Acima de 10.000,00' : 'Abaixo de 10.000,00',
+          utm_source: formData.utm_source,
+          utm_medium: formData.utm_medium,
+          utm_campaign: formData.utm_campaign,
+          utm_term: formData.utm_term,
+          utm_content: formData.utm_content,
+          full_url: formData.full_url,
+          candidacyId: candidacyId,
+          fbclid: formData.fbclid,
+          gclid: formData.gclid
+        };
+
+        console.log("[FRONTEND] Payload mapeado para a API:", payload);
+
+        const response = await fetch('/api/leads', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        console.log("[FRONTEND] Resposta da API:", response.status, result);
+
+        if (!response.ok) {
+          console.error("[FRONTEND] Erro retornado pela API:", result);
+        } else {
+          console.log("[FRONTEND] Lead enviado com sucesso para o ClickUp e Sellum!");
+          
+          // Google Tag Manager Event
+          if (typeof window !== 'undefined' && (window as any).dataLayer) {
+            (window as any).dataLayer.push({
+              event: 'lead_form_submitted',
+              form_type: 'distribuidor',
+              language: 'pt-br'
+            });
+          }
+        }
+
+      } catch (error) {
+        console.error("[FRONTEND] Erro ao fazer a requisição para /api/leads:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+
       // Disparar evento de conversão
       try {
         (window as any).dataLayer = (window as any).dataLayer || [];
@@ -531,7 +555,20 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
       } catch (e) {
         console.error("[FRONTEND] Erro ao enviar para o dataLayer:", e);
       }
+    } else {
+      // NÃO QUALIFICADO: Não envia para a API, pula o salvamento
+      console.log("[FRONTEND] Lead não qualificado (investimento < R$ 10k). Pulando envio para API e salvamento no sistema.");
+      setIsSubmitting(false);
+
+      // Redireciona para o WhatsApp de condições diferenciadas/exclusivas
+      try {
+        const waLink = getWhatsAppLink(candidacyId);
+        window.open(waLink, '_blank');
+      } catch (waError) {
+        console.error("[FRONTEND] Erro ao abrir WhatsApp:", waError);
+      }
     }
+
     setIsSuccess(true);
   };
 
@@ -579,23 +616,50 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
                 className="space-y-6 text-center py-4"
               >
                 <div className="w-16 h-16 bg-[#F4CDD4]/10 text-[#F4CDD4] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(244,205,212,0.2)] animate-pulse">
-                  <CheckCircle size={36} className="text-[#F4CDD4]" />
+                  {isQualified ? (
+                    <CheckCircle size={36} className="text-[#F4CDD4]" />
+                  ) : (
+                    <MessageCircle size={36} className="text-[#F4CDD4]" />
+                  )}
                 </div>
                 
-                <h4 className="text-2xl font-black text-white tracking-tight">Candidatura Enviada!</h4>
+                <h4 className="text-2xl font-black text-white tracking-tight">
+                  {isQualified ? 'Candidatura Enviada!' : 'Condições Exclusivas!'}
+                </h4>
                 
                 <p className="text-white/70 text-sm max-w-md mx-auto leading-relaxed">
-                  Agradecemos o seu interesse em se tornar um distribuidor autorizado Bubbles®.
-                  <br /><br />
-                  Nossa equipe de expansão já recebeu o seu cadastro comercial e técnico com sucesso (ID: <span className="text-[#F4CDD4] font-mono">{lastCandidacyId}</span>). Em breve, um dos nossos atendentes entrará em contato com você diretamente para prosseguir com o seu credenciamento.
+                  {isQualified ? (
+                    <>
+                      Agradecemos o seu interesse em se tornar um distribuidor autorizado Bubbles®.
+                      <br /><br />
+                      Nossa equipe de expansão já recebeu o seu cadastro comercial e técnico com sucesso (ID: <span className="text-[#F4CDD4] font-mono">{lastCandidacyId}</span>). Em breve, um dos nossos atendentes entrará em contato com você diretamente para prosseguir com o seu credenciamento.
+                    </>
+                  ) : (
+                    <>
+                      Para sua comodidade, abrimos uma conversa no WhatsApp para que você possa comprar nossos produtos com condições exclusivas e diferenciadas.
+                      <br /><br />
+                      Se a janela do WhatsApp não abriu automaticamente, clique no botão abaixo para iniciar o seu atendimento comercial personalizado.
+                      <br />
+                      (ID do Atendimento: <span className="text-[#F4CDD4] font-mono">{lastCandidacyId}</span>)
+                    </>
+                  )}
                 </p>
-
-                <div className="pt-6">
+                <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  {!isQualified && (
+                    <a 
+                      href={getWhatsAppLink(lastCandidacyId)}
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="w-full sm:w-auto px-8 bg-[#F4CDD4] text-[#080808] py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(244,205,212,0.2)] flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle size={16} /> Abrir WhatsApp
+                    </a>
+                  )}
                   <button 
                     onClick={handleClose}
-                    className="w-full max-w-xs bg-[#F4CDD4] text-[#080808] py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(244,205,212,0.2)]"
+                    className={`w-full sm:w-auto px-8 py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform ${!isQualified ? 'bg-white/10 text-white hover:bg-white/20' : 'bg-[#F4CDD4] text-[#080808] shadow-[0_0_20px_rgba(244,205,212,0.2)]'}`}
                   >
-                    Fechar e Voltar
+                    {isQualified ? 'Fechar e Voltar' : 'Fechar'}
                   </button>
                 </div>
               </motion.div>
@@ -863,11 +927,20 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
                 </div>
 
                 {formData.hasInvestment === 'no' && (
-                  <div className="p-6 bg-white/5 border border-white/10 rounded-2xl">
-                    <p className="text-white/60 text-xs leading-relaxed">
-                      Entendemos. No momento, focamos em parceiros com este perfil de investimento para garantir a sustentabilidade do negócio. 
-                      Manteremos seu contato para futuras oportunidades.
+                  <div className="p-6 bg-white/5 border border-white/10 rounded-2xl space-y-4">
+                    <p className="text-white/80 text-xs leading-relaxed">
+                      Entendemos perfeitamente. No momento, focamos em distribuidores autorizados com este perfil de investimento para o credenciamento do estoque inicial.
+                      <br /><br />
+                      No entanto, se você deseja adquirir nossos produtos com <span className="text-[#F4CDD4] font-bold">condições e descontos exclusivos</span>, você pode falar diretamente com o nosso atendimento comercial clicando no link abaixo:
                     </p>
+                    <a 
+                      href={getWhatsAppLink(lastCandidacyId)}
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-[#F4CDD4] hover:text-white transition-colors text-xs font-bold uppercase tracking-wider bg-[#F4CDD4]/10 px-4 py-2 rounded-lg border border-[#F4CDD4]/20 hover:bg-[#F4CDD4]/20"
+                    >
+                      <MessageCircle size={14} /> Falar no WhatsApp (Descontos)
+                    </a>
                   </div>
                 )}
 
@@ -882,7 +955,7 @@ const MultiStepForm = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
                       <div className="w-5 h-5 border-2 border-[#080808]/30 border-t-[#080808] rounded-full animate-spin" />
                     ) : (
                       <>
-                        {formData.hasInvestment === 'yes' ? 'Finalizar Candidatura' : 'Encerrar'} <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                        {formData.hasInvestment === 'yes' ? 'Finalizar Candidatura' : 'Quero Condições Exclusivas'} <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                       </>
                     )}
                   </button>
