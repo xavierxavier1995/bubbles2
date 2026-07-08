@@ -529,19 +529,90 @@ Quero comprar com condições exclusivas!`;
         setIsSubmitting(false);
       }
 
-      // Disparar evento de conversão
+      // Disparar evento de conversão Google Ads (com Conversões Otimizadas / Enhanced Conversions)
       try {
+        // Formatar dados para Conversões Otimizadas (Enhanced Conversions)
+        const formattedEmail = formData.email ? formData.email.trim().toLowerCase() : '';
+        const formattedName = formData.name ? formData.name.trim() : '';
+        const cleanPhone = unmask(formData.whatsapp);
+        let formattedPhone = cleanPhone;
+        if (formattedPhone) {
+          if (!formattedPhone.startsWith('55') && (formattedPhone.length === 10 || formattedPhone.length === 11)) {
+            formattedPhone = '55' + formattedPhone;
+          }
+          if (!formattedPhone.startsWith('+')) {
+            formattedPhone = '+' + formattedPhone;
+          }
+        }
+
+        // 1. Inicializar e disparar Conversão Direta do Google Ads (gtag.js)
+        try {
+          (window as any).dataLayer = (window as any).dataLayer || [];
+          if (!(window as any).gtag) {
+            (window as any).gtag = function() {
+              (window as any).dataLayer.push(arguments);
+            };
+            const scriptId = 'google-ads-gtag';
+            if (!document.getElementById(scriptId)) {
+              const script = document.createElement('script');
+              script.id = scriptId;
+              script.async = true;
+              script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-16840226693';
+              document.head.appendChild(script);
+            }
+          }
+          
+          (window as any).gtag('js', new Date());
+          (window as any).gtag('config', 'AW-16840226693', {
+            'allow_enhanced_conversions': true
+          });
+
+          // Configurar os dados do usuário para Conversão Otimizada
+          (window as any).gtag('set', 'user_data', {
+            'email': formattedEmail,
+            'phone_number': formattedPhone,
+            'address': {
+              'first_name': formattedName,
+              'city': formData.city ? formData.city.trim() : ''
+            }
+          });
+
+          // Disparar o evento de conversão específico do Google Ads
+          (window as any).gtag('event', 'conversion', {
+            'send_to': 'AW-16840226693/P_cMCKe3i80cEIXvhd4-',
+            'value': 10000.0,
+            'currency': 'BRL',
+            'transaction_id': candidacyId
+          });
+
+          console.log("[FRONTEND] Conversão direta do Google Ads (Captacao-distribuidor) disparada com Enhanced Conversions!");
+        } catch (gtagErr) {
+          console.error("[FRONTEND] Erro ao disparar conversão direta do Google Ads:", gtagErr);
+        }
+
+        // 2. Disparar eventos de conversão no dataLayer (GTM)
         (window as any).dataLayer = (window as any).dataLayer || [];
         
-        // Evento Personalizado solicitado pelo usuário
+        // Evento Personalizado solicitado pelo usuário com Enhanced Conversions prontas no dataLayer
         (window as any).dataLayer.push({
           event: 'form_submit',
           form_name: 'candidatura_distribuidor',
           is_qualified: 'sim',
-          // Incluindo dados para facilitar a captura direta se necessário
-          email: formData.email,
-          phone: unmask(formData.whatsapp),
-          name: formData.name
+          conversion_id: '16840226693',
+          conversion_label: 'P_cMCKe3i80cEIXvhd4-',
+          conversion_name: 'Captacao-distribuidor',
+          value: 10000.0,
+          currency: 'BRL',
+          transaction_id: candidacyId,
+          // Dados estruturados conforme o padrão de Conversões Otimizadas do GTM
+          user_data: {
+            email: formattedEmail,
+            phone_number: formattedPhone,
+            address: {
+              first_name: formattedName,
+              city: formData.city ? formData.city.trim() : ''
+            }
+          }
         });
 
         // Mantendo o gtm.formSubmit para compatibilidade com gatilhos nativos
@@ -551,7 +622,7 @@ Quero comprar com condições exclusivas!`;
           is_qualified: 'sim'
         });
 
-        console.log("[FRONTEND] Eventos form_submit e gtm.formSubmit enviados (Sucesso)");
+        console.log("[FRONTEND] Eventos form_submit e gtm.formSubmit enviados (Sucesso) com dados estruturados para GTM Enhanced Conversions");
       } catch (e) {
         console.error("[FRONTEND] Erro ao enviar para o dataLayer:", e);
       }
