@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 110" fill="none">
+  <!-- Paw dots above 'e' -->
+  <circle cx="108" cy="14" r="8.5" fill="currentColor" />
+  <circle cx="128" cy="7" r="8.5" fill="currentColor" />
+  <circle cx="148" cy="14" r="8.5" fill="currentColor" />
+  
+  <!-- 'p' -->
+  <path fill="currentColor" d="M 12 28 H 45 C 60 28, 70 38, 70 52 C 70 66, 60 76, 45 76 H 30 V 102 H 12 Z M 30 42 V 62 H 44 C 51 62, 54 58, 54 52 C 54 46, 51 42, 44 42 Z" />
+  
+  <!-- 'e' -->
+  <path fill="currentColor" d="M 128 28 C 104 28, 88 44, 88 65 C 88 86, 104 102, 128 102 C 144 102, 156 95, 164 85 L 151 75 C 146 81, 138 86, 128 86 C 114 86, 105 77, 104 65 H 166 C 167 61, 167 58, 167 54 C 167 39, 151 28, 128 28 Z M 105 53 C 108 43, 117 39, 128 39 C 139 39, 147 43, 150 53 Z" />
+
+  <!-- 'T' -->
+  <path fill="currentColor" d="M 176 28 H 238 V 42 H 216 V 102 H 198 V 42 H 176 Z" />
+
+  <!-- 'South America' -->
+  <text x="125" y="124" fill="currentColor" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="900" font-size="22" letter-spacing="-0.3" text-anchor="middle">South America</text>
+</svg>
