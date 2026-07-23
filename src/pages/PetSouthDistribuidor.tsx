@@ -10,6 +10,34 @@ import { motion, AnimatePresence } from 'motion/react';
 import { maskPhone, maskCpfCnpj, unmask } from '../utils/masks';
 
 // --- Logo Header Component ---
+const PetSouthLogoSVG = React.memo(() => (
+  <svg 
+    viewBox="0 0 670 380" 
+    className="h-7 sm:h-9 md:h-11 w-auto shrink-0 drop-shadow-[0_0_12px_rgba(147,51,234,0.4)]" 
+    aria-label="PET South America Logo"
+    role="img"
+  >
+    <g fill="#9333EA">
+      {/* 3 paw dots above 'e' */}
+      <circle cx="280" cy="46" r="30" />
+      <circle cx="355" cy="18" r="30" />
+      <circle cx="430" cy="46" r="30" />
+      
+      {/* 'p' */}
+      <path d="M 20 90 H 130 C 190 90, 230 125, 230 172 C 230 220, 190 255, 130 255 H 85 V 345 H 20 Z M 85 142 V 203 H 130 C 153 203, 168 189, 168 172 C 168 155, 153 142, 130 142 Z" />
+      
+      {/* 'e' */}
+      <path d="M 355 90 C 270 90, 210 145, 210 215 C 210 285, 270 340, 355 340 C 413 340, 460 315, 487 276 L 441 242 C 423 266, 395 284, 355 284 C 305 284, 271 252, 269 215 H 493 C 495 202, 497 189, 497 176 C 497 122, 440 90, 355 90 Z M 270 172 C 280 140, 310 128, 355 128 C 400 128, 427 140, 435 172 Z" />
+
+      {/* 'T' */}
+      <path d="M 515 90 H 655 V 142 H 602 V 345 H 542 V 142 H 515 Z" />
+
+      {/* 'South America' */}
+      <text x="338" y="398" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" fontWeight="900" fontSize="56" letterSpacing="0.5" textAnchor="middle">South America</text>
+    </g>
+  </svg>
+));
+
 const BubblesPetSouthLogo = React.memo(() => (
   <div className="flex items-center gap-2.5 sm:gap-3.5 md:gap-4">
     {/* Bubbles Logo */}
@@ -27,11 +55,7 @@ const BubblesPetSouthLogo = React.memo(() => (
 
     {/* PET South America Official Logo */}
     <div className="flex items-center">
-      <img 
-        src="/logo-petsa-2025.webp" 
-        alt="PET South America Logo" 
-        className="h-7 sm:h-9 md:h-11 w-auto shrink-0 object-contain drop-shadow-[0_0_12px_rgba(126,34,206,0.3)]"
-      />
+      <PetSouthLogoSVG />
     </div>
   </div>
 ));
