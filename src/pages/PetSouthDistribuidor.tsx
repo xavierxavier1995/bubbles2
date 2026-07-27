@@ -13,11 +13,11 @@ import { maskPhone, maskCpfCnpj, unmask } from '../utils/masks';
 const PetSouthLogoSVG = React.memo(() => (
   <svg 
     viewBox="0 0 670 380" 
-    className="h-7 sm:h-9 md:h-11 w-auto shrink-0 drop-shadow-[0_0_12px_rgba(147,51,234,0.4)]" 
+    className="h-7 sm:h-9 md:h-11 w-auto shrink-0 drop-shadow-[0_0_12px_rgba(255,255,255,0.3)]" 
     aria-label="PET South America Logo"
     role="img"
   >
-    <g fill="#9333EA">
+    <g fill="#FFFFFF">
       {/* 3 paw dots above 'e' */}
       <circle cx="280" cy="46" r="30" />
       <circle cx="355" cy="18" r="30" />
@@ -146,7 +146,7 @@ const StickyBar = React.memo(({ onOpenForm, heroButtonRef }: { onOpenForm: () =>
             onClick={onOpenForm}
             className="bg-gradient-to-r from-[#F4CDD4] via-[#FDE8ED] to-[#F4CDD4] text-[#080808] px-5 md:px-8 py-2.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest shadow-[0_0_15px_rgba(244,205,212,0.3)] transition-all shrink-0 text-center"
           >
-            Seja Distribuidor PET South
+            Agendar Reunião Agora
           </motion.button>
         </motion.div>
       )}
@@ -596,7 +596,7 @@ Quero comprar com condições exclusivas da feira!`;
         <div className="p-8 border-b border-white/5 flex justify-between items-center bg-[#1A1A1A]">
           <div>
             <h3 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-              <span>{isSuccess ? 'Candidatura Recebida' : 'Candidatura PET South America'}</span>
+              <span>{isSuccess ? 'Agendamento Recebido' : 'Agendar Reunião - PET South America'}</span>
             </h3>
             {!isSuccess && (
               <p className="text-[#F4CDD4] text-[10px] uppercase tracking-widest mt-1 font-bold">Passo {step} de 5 • Vagas Limitadas</p>
@@ -894,7 +894,7 @@ Quero comprar com condições exclusivas da feira!`;
                         disabled={!formData.hasInvestment || isSubmitting} 
                         className="flex-[2] bg-[#F4CDD4] text-[#080808] py-4 rounded-xl font-black uppercase text-xs disabled:opacity-50 flex items-center justify-center gap-2"
                       >
-                        {isSubmitting ? 'Enviando...' : 'Finalizar Candidatura'}
+                        {isSubmitting ? 'Enviando...' : 'AGENDAR REUNIÃO AGORA'}
                       </button>
                     </div>
                   </motion.div>
@@ -913,6 +913,13 @@ export default function PetSouthDistribuidor() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const heroButtonRef = useRef<HTMLButtonElement>(null);
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#080808] text-white font-sans selection:bg-[#F4CDD4] selection:text-[#080808]">
       
@@ -925,7 +932,7 @@ export default function PetSouthDistribuidor() {
             onClick={() => setIsFormOpen(true)}
             className="bg-[#F4CDD4] text-[#080808] px-4 md:px-6 py-2 md:py-2.5 rounded-full font-black text-[10px] md:text-xs uppercase tracking-widest hover:bg-white transition-all shadow-[0_0_15px_rgba(244,205,212,0.2)]"
           >
-            Quero Ser Distribuidor
+            Agendar Reunião
           </button>
         </div>
       </header>
@@ -961,17 +968,7 @@ export default function PetSouthDistribuidor() {
             </p>
 
             {/* Micro Highlights */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-              <div className="p-3 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-3">
-                <div className="p-2 bg-[#F4CDD4]/15 rounded-xl text-[#F4CDD4]">
-                  <TrendingUp size={18} />
-                </div>
-                <div>
-                  <div className="text-xs font-black text-white">Até 45% Margem</div>
-                  <div className="text-[10px] text-white/50">Lucro real e recorrente</div>
-                </div>
-              </div>
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <div className="p-3 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-3">
                 <div className="p-2 bg-[#F4CDD4]/15 rounded-xl text-[#F4CDD4]">
                   <Shield size={18} />
@@ -998,26 +995,27 @@ export default function PetSouthDistribuidor() {
               <button 
                 ref={heroButtonRef}
                 onClick={() => setIsFormOpen(true)}
-                className="bg-gradient-to-r from-[#F4CDD4] via-[#FDE8ED] to-[#F4CDD4] text-[#080808] px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-[0_0_25px_rgba(244,205,212,0.3)] flex items-center justify-center gap-2 group"
+                className="bg-gradient-to-r from-[#F4CDD4] via-[#FDE8ED] to-[#F4CDD4] text-[#080808] px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-[0_0_25px_rgba(244,205,212,0.3)] flex items-center justify-center gap-2 group cursor-pointer"
               >
-                <span>Quero me Candidatar Agora</span>
+                <span>AGENDAR REUNIÃO</span>
                 <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
 
-              <a 
-                href="#calculadora"
-                className="bg-white/5 hover:bg-white/10 text-white border border-white/15 px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs text-center transition-all flex items-center justify-center gap-2"
+              <button 
+                type="button"
+                onClick={() => scrollToSection('calculadora')}
+                className="bg-white/5 hover:bg-white/10 text-white border border-white/15 px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs text-center transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Calculator size={16} className="text-[#F4CDD4]" />
                 <span>Simular Faturamento</span>
-              </a>
+              </button>
             </div>
 
             {/* Highlighted text as requested */}
             <p className="text-[11px] text-white/80 uppercase tracking-wider flex items-center gap-1.5 pt-1 font-medium">
               <Lock size={13} className="text-[#F4CDD4] shrink-0" /> 
               <span>
-                Atendimento prioritário para contatos da <span className="bg-[#7E22CE] text-white px-2 py-0.5 rounded font-black tracking-widest shadow-sm">PET SOUTH AMERICA</span>
+                Atendimento prioritário para contatos da <span className="bg-[#F4CDD4] text-[#080808] px-2 py-0.5 rounded font-black tracking-widest shadow-sm">PET SOUTH AMERICA</span>
               </span>
             </p>
           </div>
@@ -1052,19 +1050,19 @@ export default function PetSouthDistribuidor() {
               
               <div className="space-y-3 pt-2">
                 <div className="flex items-start gap-3">
-                  <CheckCircle size={18} className="text-[#7E22CE] shrink-0 mt-0.5" />
+                  <CheckCircle size={18} className="text-[#BE185D] shrink-0 mt-0.5" />
                   <p className="text-xs font-bold text-[#080808]/90">
                     <strong className="text-[#080808] font-black">Lançamentos Exclusivos:</strong> Acesso em primeira mão às inovações em estética e cosmética veterinária.
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle size={18} className="text-[#7E22CE] shrink-0 mt-0.5" />
+                  <CheckCircle size={18} className="text-[#BE185D] shrink-0 mt-0.5" />
                   <p className="text-xs font-bold text-[#080808]/90">
                     <strong className="text-[#080808] font-black">Conexão Direta:</strong> Atendimento com diretores e executivos da Bubbles® com condições diferenciadas.
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle size={18} className="text-[#7E22CE] shrink-0 mt-0.5" />
+                  <CheckCircle size={18} className="text-[#BE185D] shrink-0 mt-0.5" />
                   <p className="text-xs font-bold text-[#080808]/90">
                     <strong className="text-[#080808] font-black">Aceleração de Vendas:</strong> Estratégias prontas de sell-out para garantir rápido giro de estoque na sua região.
                   </p>
@@ -1075,25 +1073,25 @@ export default function PetSouthDistribuidor() {
             {/* Right Block: 4 Information/Stats Blocks */}
             <div className="lg:col-span-6 grid grid-cols-2 gap-4">
               <div className="p-6 bg-white border border-[#F4CDD4] rounded-3xl shadow-sm text-center space-y-1">
-                <div className="text-3xl md:text-4xl font-black text-[#7E22CE]">32.650+</div>
+                <div className="text-3xl md:text-4xl font-black text-[#BE185D]">32.650+</div>
                 <div className="text-xs font-black text-[#080808] uppercase tracking-wider">Profissionais</div>
                 <p className="text-[10px] text-[#080808]/60 font-medium">Visitantes qualificados no evento</p>
               </div>
 
               <div className="p-6 bg-white border border-[#F4CDD4] rounded-3xl shadow-sm text-center space-y-1">
-                <div className="text-3xl md:text-4xl font-black text-[#7E22CE]">272+</div>
+                <div className="text-3xl md:text-4xl font-black text-[#BE185D]">272+</div>
                 <div className="text-xs font-black text-[#080808] uppercase tracking-wider">Expositores</div>
                 <p className="text-[10px] text-[#080808]/60 font-medium">Líderes de mercado reunidos</p>
               </div>
 
               <div className="p-6 bg-white border border-[#F4CDD4] rounded-3xl shadow-sm text-center space-y-1">
-                <div className="text-3xl md:text-4xl font-black text-[#7E22CE]">976</div>
+                <div className="text-3xl md:text-4xl font-black text-[#BE185D]">976</div>
                 <div className="text-xs font-black text-[#080808] uppercase tracking-wider">Cidades</div>
                 <p className="text-[10px] text-[#080808]/60 font-medium">Cobertura em todos os estados</p>
               </div>
 
               <div className="p-6 bg-white border border-[#F4CDD4] rounded-3xl shadow-sm text-center space-y-1">
-                <div className="text-3xl md:text-4xl font-black text-[#7E22CE]">83%</div>
+                <div className="text-3xl md:text-4xl font-black text-[#BE185D]">83%</div>
                 <div className="text-xs font-black text-[#080808] uppercase tracking-wider">Concentração Sudeste</div>
                 <p className="text-[10px] text-[#080808]/60 font-medium">Alto poder de compra regional</p>
               </div>
@@ -1241,7 +1239,7 @@ export default function PetSouthDistribuidor() {
             onClick={() => setIsFormOpen(true)}
             className="bg-[#080808] hover:bg-[#1A1A1A] text-[#F4CDD4] px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-2xl hover:scale-105"
           >
-            Quero me Candidatar Agora
+            AGENDAR REUNIÃO AGORA
           </button>
         </div>
       </section>
