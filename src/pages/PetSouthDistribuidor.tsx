@@ -4,7 +4,7 @@ import {
   ArrowRight, Star, HelpCircle, Instagram, Youtube, MessageCircle, Phone, Mail,
   Shield, Zap, BarChart3, Users, Award, Lock, X, ChevronRight, Calculator,
   BookOpen, GraduationCap, Sparkles, Clock, Droplets, Wind, Beaker, Leaf, Eye, Heart, Globe,
-  ChevronLeft, MapPin, Building2, Calendar, Award as Trophy
+  ChevronLeft, MapPin, Building2, Calendar, Award as Trophy, ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { maskPhone, maskCpfCnpj, unmask } from '../utils/masks';
@@ -115,7 +115,7 @@ const StickyBar = React.memo(({ onOpenForm, heroButtonRef }: { onOpenForm: () =>
           <div className="flex items-center gap-3">
             <BubblesPetSouthLogo />
             <p className="text-white text-[10px] md:text-xs font-bold hidden lg:block opacity-80">
-              Atendimento Especial <span className="text-[#F4CDD4]">PET South America</span>. Garanta exclusividade na sua região.
+              Atendimento Especial <span className="text-[#F4CDD4]">PET South America</span>. Lançamento da <strong className="text-white">Linha Care</strong> & Condições Especiais na Feira.
             </p>
           </div>
           <motion.button 
@@ -124,7 +124,7 @@ const StickyBar = React.memo(({ onOpenForm, heroButtonRef }: { onOpenForm: () =>
             onClick={onOpenForm}
             className="bg-gradient-to-r from-[#F4CDD4] via-[#FDE8ED] to-[#F4CDD4] text-[#080808] px-5 md:px-8 py-2.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest shadow-[0_0_15px_rgba(244,205,212,0.3)] transition-all shrink-0 text-center"
           >
-            Agendar Reunião Agora
+            AGENDAR REUNIÃO NA FEIRA
           </motion.button>
         </motion.div>
       )}
@@ -135,10 +135,10 @@ const StickyBar = React.memo(({ onOpenForm, heroButtonRef }: { onOpenForm: () =>
 // --- Benefits Marquee ---
 const BenefitsMarquee = React.memo(() => {
   const benefits = [
-    "Destaque PET South America", "Margens de Lucro Elevadas", "Exclusividade Territorial", 
-    "Suporte de Marketing 360º", "Produtos Veganos e Cruelty-free", 
-    "Alta Diluição 1:10", "Fragrâncias de Perfumaria Fina", "Material de PDV Gratuito",
-    "Alta Recompra (98%)", "Produto Favorito dos Groomers", "Suporte no Sell-out"
+    "🔥 LANÇAMENTO NOVA LINHA CARE", "Condições Especiais para Distribuidores & Lojistas", 
+    "Markup Médio de 80%", "Duas Linhas Profissionais", "Reunião Presencial no Estande",
+    "Kits de Banhos Sensoriais", "Linha de Coloração", "Linha Home Care",
+    "Até 70% Recompra", "Suporte no Sell-out", "Material de PDV Gratuito"
   ];
 
   return (
@@ -234,7 +234,7 @@ const ROICalculator = React.memo(() => {
   const [investment, setInvestment] = useState(10000);
   const paybackMonths = "2-3";
 
-  const revenue = Math.round(investment / 0.55); 
+  const revenue = Math.round(investment * 1.8); 
   const profit = revenue - investment;
 
   return (
@@ -269,7 +269,7 @@ const ROICalculator = React.memo(() => {
             
             <div className="mt-4 md:mt-8 pt-4 md:pt-8 border-t border-white/10">
               <p className="text-white/40 text-[8px] md:text-[10px] italic leading-relaxed">
-                *Cálculo baseado na margem média praticada. O giro de estoque ocorre em ciclos de 45 a 60 dias. Esses dados podem variar de acordo com região, logística e processos do distribuidor.
+                *Cálculo baseado no markup médio de 80% praticado. O giro de estoque ocorre em ciclos de 45 a 60 dias. Esses dados podem variar de acordo com região, logística e processos do distribuidor.
               </p>
             </div>
           </div>
@@ -293,8 +293,8 @@ const ROICalculator = React.memo(() => {
 
             <div className="grid grid-cols-2 gap-2 md:gap-4">
               <div className="bg-white/5 p-2 md:p-4 rounded-xl md:rounded-2xl border border-white/5">
-                <p className="text-white/40 text-[6px] md:text-[8px] font-black uppercase tracking-widest mb-0.5 md:mb-1">Margem Média</p>
-                <p className="text-xs md:text-base font-black text-white">Até 45%</p>
+                <p className="text-white/40 text-[6px] md:text-[8px] font-black uppercase tracking-widest mb-0.5 md:mb-1">Markup Médio</p>
+                <p className="text-xs md:text-base font-black text-white">80% MKP</p>
               </div>
               <motion.div 
                 animate={{ 
@@ -846,7 +846,7 @@ Quero comprar com condições exclusivas da feira!`;
                   <motion.div key="step5" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-6">
                     <h4 className="text-xl font-black text-white mb-6">Investimento Inicial</h4>
                     <p className="text-white/80 text-sm leading-relaxed">
-                      Para assegurar a exclusividade territorial e o suporte de fábrica PET South America, o investimento mínimo inicial em estoque é de <strong className="text-[#F4CDD4]">R$ 10.000,00</strong>.
+                      Para assegurar o suporte direto de fábrica PET South America e condições diferenciadas, o investimento mínimo inicial em estoque é de <strong className="text-[#F4CDD4]">R$ 10.000,00</strong>.
                     </p>
                     
                     <div>
@@ -952,8 +952,8 @@ export default function PetSouthDistribuidor() {
                   <Shield size={18} />
                 </div>
                 <div>
-                  <div className="text-xs font-black text-white">Exclusividade</div>
-                  <div className="text-[10px] text-white/50">Território protegido</div>
+                  <div className="text-xs font-black text-white">Linha Completa</div>
+                  <div className="text-[10px] text-white/50">Profissional & Home Care</div>
                 </div>
               </div>
 
@@ -962,8 +962,8 @@ export default function PetSouthDistribuidor() {
                   <Award size={18} />
                 </div>
                 <div>
-                  <div className="text-xs font-black text-white">98% Recompra</div>
-                  <div className="text-[10px] text-white/50">Fidelidade dos groomers</div>
+                  <div className="text-xs font-black text-white">Até 70% Recompra</div>
+                  <div className="text-[10px] text-white/50">Alta demanda do mercado</div>
                 </div>
               </div>
             </div>
@@ -1023,28 +1023,49 @@ export default function PetSouthDistribuidor() {
                 A PET South America é o Epicentro dos Negócios Pet na América Latina
               </h2>
               <p className="text-[#080808]/80 text-sm md:text-base leading-relaxed font-medium">
-                Sendo o maior ponto de encontro de negócios e tendências da indústria pet da América Latina, a feira é a oportunidade perfeita para distribuidores ampliarem seu portfólio com marcas de alta performance como a Bubbles®, garantindo exclusividade territorial e suporte direto de fábrica.
+                Sendo o maior ponto de encontro de negócios e tendências da indústria pet da América Latina, a feira é a oportunidade perfeita para distribuidores ampliarem seu portfólio com marcas de alta performance como a Bubbles®, contando com duas linhas profissionais completas, banhos sensoriais, coloração e suporte direto de fábrica.
               </p>
               
               <div className="space-y-3 pt-2">
                 <div className="flex items-start gap-3">
                   <CheckCircle size={18} className="text-[#BE185D] shrink-0 mt-0.5" />
                   <p className="text-xs font-bold text-[#080808]/90">
-                    <strong className="text-[#080808] font-black">Lançamentos Exclusivos:</strong> Acesso em primeira mão às inovações em estética e cosmética veterinária.
+                    <strong className="text-[#080808] font-black">Lançamento Exclusivo da Linha Care:</strong> Acesso em primeira mão à nova linha de cosmética e cuidados especiais.
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle size={18} className="text-[#BE185D] shrink-0 mt-0.5" />
                   <p className="text-xs font-bold text-[#080808]/90">
-                    <strong className="text-[#080808] font-black">Conexão Direta:</strong> Atendimento com diretores e executivos da Bubbles® com condições diferenciadas.
+                    <strong className="text-[#080808] font-black">Condições Especiais para a Feira:</strong> Descontos exclusivos, prazos estendidos e bonificação em estoque para reuniões agendadas.
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle size={18} className="text-[#BE185D] shrink-0 mt-0.5" />
                   <p className="text-xs font-bold text-[#080808]/90">
-                    <strong className="text-[#080808] font-black">Aceleração de Vendas:</strong> Estratégias prontas de sell-out para garantir rápido giro de estoque na sua região.
+                    <strong className="text-[#080808] font-black">Atendimento para Distribuidores & Lojistas:</strong> Condições comerciais diferenciadas e suporte direto dos executivos da fábrica.
                   </p>
                 </div>
+              </div>
+
+              {/* Special Trade Show Banner */}
+              <div className="mt-6 p-5 bg-[#080808] text-white rounded-2xl border-2 border-[#BE185D] shadow-xl space-y-3">
+                <div className="flex items-center gap-2 text-[#F4CDD4]">
+                  <Sparkles size={18} className="animate-pulse" />
+                  <span className="text-xs font-black uppercase tracking-widest">Exclusivo na PET South America</span>
+                </div>
+                <h3 className="text-base font-black text-white uppercase">
+                  Agende sua Reunião e Garanta Condições Especiais na Feira!
+                </h3>
+                <p className="text-white/70 text-xs leading-relaxed">
+                  Negocie diretamente no estande Bubbles® com a diretoria comercial. Condições exclusivas de parcelamento, bonificação de estoque inicial e prioridade de entrega para <strong className="text-[#F4CDD4]">distribuidores e lojistas</strong> que agendarem a reunião com antecedência.
+                </p>
+                <button
+                  onClick={() => setIsFormOpen(true)}
+                  className="w-full sm:w-auto bg-[#F4CDD4] text-[#080808] px-6 py-3 rounded-xl font-black text-xs uppercase tracking-wider hover:bg-white transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Calendar size={15} />
+                  <span>Agendar Reunião no Estande</span>
+                </button>
               </div>
             </div>
 
@@ -1079,6 +1100,163 @@ export default function PetSouthDistribuidor() {
         </div>
       </section>
 
+      {/* NEW SECTION: Lançamento Exclusivo da Linha Care Bubbles® */}
+      <section className="py-16 md:py-24 px-4 md:px-8 bg-gradient-to-b from-[#080808] via-[#120D14] to-[#080808] relative overflow-hidden border-b border-[#F4CDD4]/20">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
+            <span className="px-4 py-1.5 bg-[#F4CDD4]/20 border border-[#F4CDD4]/50 text-[#F4CDD4] text-[10px] md:text-xs font-black uppercase tracking-widest rounded-full inline-flex items-center gap-2">
+              <Sparkles size={14} className="text-[#F4CDD4]" />
+              <span>Lançamento Oficial PET South America</span>
+            </span>
+            <h2 className="text-2xl md:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase leading-tight">
+              Nova <span className="text-[#F4CDD4] drop-shadow-[0_0_20px_rgba(244,205,212,0.4)]">Linha Care</span> Bubbles®
+            </h2>
+            <p className="text-white/80 text-xs md:text-sm leading-relaxed max-w-2xl mx-auto font-medium">
+              A solução perfeita em cosmética de manutenção para tutores e revenda no balcão de pet shops. <strong className="text-[#F4CDD4]">11 SKUs estratégicos</strong> que cobrem 100% da rotina de cuidados em casa — permitindo vender o mix completo sem lacunas de categoria.
+            </p>
+          </div>
+
+          {/* 11 SKUs Grid Breakdown by Category */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-12">
+            
+            {/* Category 1: Shampoos */}
+            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl space-y-3 hover:border-[#F4CDD4]/40 transition-all">
+              <div className="w-10 h-10 bg-[#F4CDD4]/15 text-[#F4CDD4] rounded-xl flex items-center justify-center font-black">
+                01
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-wider">Shampoos (300ml)</h3>
+              <p className="text-[10px] text-[#F4CDD4] font-bold uppercase tracking-widest">3 SKUs Essenciais</p>
+              <ul className="text-xs text-white/70 space-y-1.5 font-medium border-t border-white/10 pt-2">
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Limpeza Profunda</li>
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Neutro de Uso Diário</li>
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Pelos Claros</li>
+              </ul>
+            </div>
+
+            {/* Category 2: Condicionamento */}
+            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl space-y-3 hover:border-[#F4CDD4]/40 transition-all">
+              <div className="w-10 h-10 bg-[#F4CDD4]/15 text-[#F4CDD4] rounded-xl flex items-center justify-center font-black">
+                02
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-wider">Condicionamento</h3>
+              <p className="text-[10px] text-[#F4CDD4] font-bold uppercase tracking-widest">2 SKUs de Alta Nutrição</p>
+              <ul className="text-xs text-white/70 space-y-1.5 font-medium border-t border-white/10 pt-2">
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Condicionador Hidratante (250ml)</li>
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Máscara Multifuncional (100ml)</li>
+              </ul>
+            </div>
+
+            {/* Category 3: Finalizadores */}
+            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl space-y-3 hover:border-[#F4CDD4]/40 transition-all">
+              <div className="w-10 h-10 bg-[#F4CDD4]/15 text-[#F4CDD4] rounded-xl flex items-center justify-center font-black">
+                03
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-wider">Finalizadores</h3>
+              <p className="text-[10px] text-[#F4CDD4] font-bold uppercase tracking-widest">2 SKUs de Praticidade</p>
+              <ul className="text-xs text-white/70 space-y-1.5 font-medium border-t border-white/10 pt-2">
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Secagem Rápida Leave-in (100ml)</li>
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Banho a Seco Desembaraçador (250ml)</li>
+              </ul>
+            </div>
+
+            {/* Category 4: Cuidados Específicos */}
+            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl space-y-3 hover:border-[#F4CDD4]/40 transition-all">
+              <div className="w-10 h-10 bg-[#F4CDD4]/15 text-[#F4CDD4] rounded-xl flex items-center justify-center font-black">
+                04
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-wider">Cuidados Específicos</h3>
+              <p className="text-[10px] text-[#F4CDD4] font-bold uppercase tracking-widest">2 SKUs Dermocosméticos</p>
+              <ul className="text-xs text-white/70 space-y-1.5 font-medium border-t border-white/10 pt-2">
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Limpeza de Olhos e Ouvidos (100ml)</li>
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Hidratante de Patas e Focinhos (50ml)</li>
+              </ul>
+            </div>
+
+            {/* Category 5: Perfumes & Body Splash */}
+            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl space-y-3 hover:border-[#F4CDD4]/40 transition-all">
+              <div className="w-10 h-10 bg-[#F4CDD4]/15 text-[#F4CDD4] rounded-xl flex items-center justify-center font-black">
+                05
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-wider">Body Splash</h3>
+              <p className="text-[10px] text-[#F4CDD4] font-bold uppercase tracking-widest">2 SKUs Alta Fixação</p>
+              <ul className="text-xs text-white/70 space-y-1.5 font-medium border-t border-white/10 pt-2">
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Body Splash Flora Pet (80ml)</li>
+                <li className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#F4CDD4]" /> Body Splash Pet Luna (80ml)</li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/* Proof of Demand & Trade Show Advantage */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+            {/* Box 1: Prova de Demanda */}
+            <div className="p-6 md:p-8 bg-white/5 border border-white/10 rounded-3xl space-y-4">
+              <div className="flex items-center gap-2 text-[#F4CDD4]">
+                <TrendingUp size={20} />
+                <span className="text-xs font-black uppercase tracking-widest">Demanda Validada Direto com o Tutor</span>
+              </div>
+              <h3 className="text-xl font-black text-white uppercase">
+                Sua Região Não Precisa Empurrar Produto: A Demanda Já Existe!
+              </h3>
+              <p className="text-white/70 text-xs leading-relaxed font-medium">
+                A marca Bubbles® já é um fenômeno de busca e engajamento. O tutor de pet procura pelo produto no ponto de venda porque já consome nosso conteúdo diariamente.
+              </p>
+              <div className="grid grid-cols-3 gap-3 border-t border-white/10 pt-4 text-center">
+                <div className="p-3 bg-black/40 rounded-xl">
+                  <div className="text-lg md:text-xl font-black text-[#F4CDD4]">+2.665</div>
+                  <div className="text-[9px] text-white/60 uppercase font-bold">Afiliados Ativos</div>
+                </div>
+                <div className="p-3 bg-black/40 rounded-xl">
+                  <div className="text-lg md:text-xl font-black text-[#F4CDD4]">+3.500</div>
+                  <div className="text-[9px] text-white/60 uppercase font-bold">Vídeos & Lives</div>
+                </div>
+                <div className="p-3 bg-black/40 rounded-xl">
+                  <div className="text-lg md:text-xl font-black text-[#F4CDD4]">4.9 / 5.0</div>
+                  <div className="text-[9px] text-white/60 uppercase font-bold">Satisfação Tutores</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Box 2: Kit Prateleira Exclusivo Feira */}
+            <div className="p-6 md:p-8 bg-gradient-to-br from-[#1F1224] to-[#080808] border-2 border-[#F4CDD4]/50 rounded-3xl space-y-4 shadow-xl">
+              <div className="flex items-center gap-2 text-[#F4CDD4]">
+                <Package size={20} />
+                <span className="text-xs font-black uppercase tracking-widest">Condição Especial PET South America</span>
+              </div>
+              <h3 className="text-xl font-black text-white uppercase">
+                Kit Prateleira + Expositor PDV Grátis no Estande
+              </h3>
+              <p className="text-white/80 text-xs leading-relaxed font-medium">
+                Fechando a reunião de distribuição no estande da feira, receba a composição do mix inicial da Linha Care completo + expositor de acrílico exclusivo para balcão e enxoval de material gráfico promocional para os seus clientes.
+              </p>
+              <div className="flex items-center gap-3 pt-2">
+                <ShieldCheck size={20} className="text-[#F4CDD4] shrink-0" />
+                <p className="text-xs font-bold text-white">
+                  Atendimento prioritário e agendamento direto com os diretores comerciais da fábrica.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 md:p-8 bg-gradient-to-r from-[#F4CDD4]/10 via-[#F4CDD4]/20 to-[#F4CDD4]/10 border border-[#F4CDD4]/40 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 text-center md:text-left">
+              <h4 className="text-lg md:text-xl font-black text-white uppercase">
+                Agende sua Reunião na PET South America e Conheça a Linha Care
+              </h4>
+              <p className="text-white/70 text-xs md:text-sm font-medium">
+                Garanta seu horário exclusivo com a diretoria comercial para negociar a distribuição na sua cidade ou região.
+              </p>
+            </div>
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="bg-[#F4CDD4] hover:bg-white text-[#080808] px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(244,205,212,0.3)] shrink-0 cursor-pointer"
+            >
+              AGENDAR REUNIÃO NA FEIRA
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* Why Choose Bubbles Section */}
       <section className="py-16 md:py-24 px-4 md:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
@@ -1098,9 +1276,9 @@ export default function PetSouthDistribuidor() {
             <div className="w-12 h-12 bg-[#F4CDD4]/15 text-[#F4CDD4] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <DollarSign size={24} />
             </div>
-            <h3 className="text-lg font-black text-white">Alta Rentabilidade</h3>
+            <h3 className="text-lg font-black text-white">Markup Médio de 80%</h3>
             <p className="text-white/60 text-xs leading-relaxed">
-              Margens brutas atrativas com precificação tabelada para proteger o seu lucro contra a concorrência desleal.
+              Excelente rentabilidade com precificação tabelada para proteger o distribuidor contra a concorrência desleal.
             </p>
           </div>
 
@@ -1108,9 +1286,9 @@ export default function PetSouthDistribuidor() {
             <div className="w-12 h-12 bg-[#F4CDD4]/15 text-[#F4CDD4] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <Award size={24} />
             </div>
-            <h3 className="text-lg font-black text-white">Perfumaria Fina & 98% Recompra</h3>
+            <h3 className="text-lg font-black text-white">Linha Completa & Até 70% Recompra</h3>
             <p className="text-white/60 text-xs leading-relaxed">
-              Formulações exclusivas com fixação prolongada. Groomers e centros estéticos exigem a reposição imediata.
+              Duas linhas profissionais completas, kits de banhos sensoriais, linha de coloração e linha home care com alta taxa de recompra.
             </p>
           </div>
 
@@ -1138,9 +1316,9 @@ export default function PetSouthDistribuidor() {
             <div className="w-12 h-12 bg-[#F4CDD4]/15 text-[#F4CDD4] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <Shield size={24} />
             </div>
-            <h3 className="text-lg font-black text-white">Proteção Territorial</h3>
+            <h3 className="text-lg font-black text-white">Diversidade & Portfólio Amplo</h3>
             <p className="text-white/60 text-xs leading-relaxed">
-              Atuação com exclusividade geograficamente mapeada para garantir previsibilidade e estabilidade no seu faturamento.
+              Kits sensoriais, coloração, produtos de alta diluição e soluções completas para banho e tosa e revenda final.
             </p>
           </div>
 
@@ -1176,8 +1354,8 @@ export default function PetSouthDistribuidor() {
               a: "O investimento inicial padrão em estoque é de R$ 10.000,00. No entanto, para contatos iniciados via PET South America, oferecemos condições especiais de parcelamento e suporte em material de divulgação."
             },
             {
-              q: "Como funciona a exclusividade de região?",
-              a: "Analisamos o potencial demográfico da sua cidade ou região. Caso a área esteja disponível, formalizamos a garantia territorial no contrato de distribuição."
+              q: "Quais são as principais linhas de produtos da Bubbles®?",
+              a: "Oferecemos duas linhas profissionais completas para centros estéticos, kits de banhos sensoriais, linha de coloração e uma linha completa para home care."
             },
             {
               q: "A fábrica fornece suporte de marketing e treinamento?",
@@ -1211,7 +1389,7 @@ export default function PetSouthDistribuidor() {
             Pronto para Expandir seu Negócio com a Bubbles®?
           </h2>
           <p className="text-[#080808]/80 text-sm md:text-base font-medium max-w-xl mx-auto">
-            Não perca a vaga exclusiva da sua região. Preencha a candidatura e nossa equipe comercial entrará em contato com atendimento prioritário.
+            Preencha o formulário e nossa equipe comercial entrará em contato com atendimento prioritário para agendar sua reunião.
           </p>
           <button 
             onClick={() => setIsFormOpen(true)}
