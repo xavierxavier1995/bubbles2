@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { maskPhone, maskCpfCnpj, unmask } from '../utils/masks';
+import { pushLead, pushWhatsappClick, pushFormOpen } from '../services/tracking';
 
 // --- Components ---
 
@@ -513,14 +514,17 @@ Quero comprar com condições exclusivas!`;
         } else {
           console.log("[FRONTEND] Lead enviado com sucesso para o ClickUp e Sellum!");
           
-          // Google Tag Manager Event
-          if (typeof window !== 'undefined' && (window as any).dataLayer) {
-            (window as any).dataLayer.push({
-              event: 'lead_form_submitted',
-              form_type: 'distribuidor',
-              language: 'pt-br'
-            });
-          }
+          pushLead({
+            candidacyId,
+            formName: 'candidatura_distribuidor',
+            qualified: true,
+            user: {
+              name: formData.name,
+              email: formData.email,
+              phone: formData.whatsapp,
+              city: formData.city
+            }
+          });
         }
 
       } catch (error) {
@@ -528,108 +532,12 @@ Quero comprar com condições exclusivas!`;
       } finally {
         setIsSubmitting(false);
       }
-
-      // Disparar evento de conversão Google Ads (com Conversões Otimizadas / Enhanced Conversions)
-      try {
-        // Formatar dados para Conversões Otimizadas (Enhanced Conversions)
-        const formattedEmail = formData.email ? formData.email.trim().toLowerCase() : '';
-        const formattedName = formData.name ? formData.name.trim() : '';
-        const cleanPhone = unmask(formData.whatsapp);
-        let formattedPhone = cleanPhone;
-        if (formattedPhone) {
-          if (!formattedPhone.startsWith('55') && (formattedPhone.length === 10 || formattedPhone.length === 11)) {
-            formattedPhone = '55' + formattedPhone;
-          }
-          if (!formattedPhone.startsWith('+')) {
-            formattedPhone = '+' + formattedPhone;
-          }
-        }
-
-        // 1. Inicializar e disparar Conversão Direta do Google Ads (gtag.js)
-        try {
-          (window as any).dataLayer = (window as any).dataLayer || [];
-          if (!(window as any).gtag) {
-            (window as any).gtag = function() {
-              (window as any).dataLayer.push(arguments);
-            };
-            const scriptId = 'google-ads-gtag';
-            if (!document.getElementById(scriptId)) {
-              const script = document.createElement('script');
-              script.id = scriptId;
-              script.async = true;
-              script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-16840226693';
-              document.head.appendChild(script);
-            }
-          }
-          
-          (window as any).gtag('js', new Date());
-          (window as any).gtag('config', 'AW-16840226693', {
-            'allow_enhanced_conversions': true
-          });
-
-          // Configurar os dados do usuário para Conversão Otimizada
-          (window as any).gtag('set', 'user_data', {
-            'email': formattedEmail,
-            'phone_number': formattedPhone,
-            'address': {
-              'first_name': formattedName,
-              'city': formData.city ? formData.city.trim() : ''
-            }
-          });
-
-          // Disparar o evento de conversão específico do Google Ads
-          (window as any).gtag('event', 'conversion', {
-            'send_to': 'AW-16840226693/P_cMCKe3i80cEIXvhd4-',
-            'value': 10000.0,
-            'currency': 'BRL',
-            'transaction_id': candidacyId
-          });
-
-          console.log("[FRONTEND] Conversão direta do Google Ads (Captacao-distribuidor) disparada com Enhanced Conversions!");
-        } catch (gtagErr) {
-          console.error("[FRONTEND] Erro ao disparar conversão direta do Google Ads:", gtagErr);
-        }
-
-        // 2. Disparar eventos de conversão no dataLayer (GTM)
-        (window as any).dataLayer = (window as any).dataLayer || [];
-        
-        // Evento Personalizado solicitado pelo usuário com Enhanced Conversions prontas no dataLayer
-        (window as any).dataLayer.push({
-          event: 'form_submit',
-          form_name: 'candidatura_distribuidor',
-          is_qualified: 'sim',
-          conversion_id: '16840226693',
-          conversion_label: 'P_cMCKe3i80cEIXvhd4-',
-          conversion_name: 'Captacao-distribuidor',
-          value: 10000.0,
-          currency: 'BRL',
-          transaction_id: candidacyId,
-          // Dados estruturados conforme o padrão de Conversões Otimizadas do GTM
-          user_data: {
-            email: formattedEmail,
-            phone_number: formattedPhone,
-            address: {
-              first_name: formattedName,
-              city: formData.city ? formData.city.trim() : ''
-            }
-          }
-        });
-
-        // Mantendo o gtm.formSubmit para compatibilidade com gatilhos nativos
-        (window as any).dataLayer.push({
-          event: 'gtm.formSubmit',
-          form_name: 'candidatura_distribuidor',
-          is_qualified: 'sim'
-        });
-
-        console.log("[FRONTEND] Eventos form_submit e gtm.formSubmit enviados (Sucesso) com dados estruturados para GTM Enhanced Conversions");
-      } catch (e) {
-        console.error("[FRONTEND] Erro ao enviar para o dataLayer:", e);
-      }
     } else {
       // NÃO QUALIFICADO: Não envia para a API, pula o salvamento
       console.log("[FRONTEND] Lead não qualificado (investimento < R$ 10k). Pulando envio para API e salvamento no sistema.");
       setIsSubmitting(false);
+
+      pushWhatsappClick('form_nao_qualificado');
 
       // Redireciona para o WhatsApp de condições diferenciadas/exclusivas
       try {
@@ -1051,13 +959,7 @@ export default function DistribuidorGabriel() {
 
   const handleOpenForm = React.useCallback(() => {
     setIsFormOpen(true);
-    try {
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).dataLayer.push({
-        event: 'form_open',
-        form_name: 'candidatura_distribuidor'
-      });
-    } catch (e) {}
+    pushFormOpen('candidatura_distribuidor');
   }, []);
 
   const statsCarouselRef = useRef<HTMLDivElement>(null);

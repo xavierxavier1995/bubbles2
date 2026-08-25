@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { maskPhone, maskCpfCnpj, unmask } from '../utils/masks';
+import { pushLead, pushWhatsappClick } from '../services/tracking';
 
 // --- Logo Header Component ---
 const BubblesPetSouthLogo = React.memo(() => (
@@ -541,11 +542,17 @@ Quero comprar com condições exclusivas da feira!`;
           body: JSON.stringify(payload)
         });
 
-        if (typeof window !== 'undefined' && (window as any).dataLayer) {
-          (window as any).dataLayer.push({
-            event: 'lead_form_submitted',
-            form_type: 'distribuidor_pet_south',
-            language: 'pt-br'
+        if (response.ok) {
+          pushLead({
+            candidacyId,
+            formName: 'candidatura_pet_south',
+            qualified: true,
+            user: {
+              name: formData.name,
+              email: formData.email,
+              phone: formData.whatsapp,
+              city: formData.city
+            }
           });
         }
       } catch (error) {
@@ -555,6 +562,7 @@ Quero comprar com condições exclusivas da feira!`;
       }
     } else {
       setIsSubmitting(false);
+      pushWhatsappClick('form_nao_qualificado');
       try {
         const waLink = getWhatsAppLink(candidacyId);
         window.open(waLink, '_blank');
