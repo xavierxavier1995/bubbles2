@@ -556,10 +556,10 @@ Quero comprar com condições exclusivas!`;
       <motion.div 
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-[#121212] border border-white/10 rounded-[32px] w-full max-w-2xl overflow-hidden shadow-2xl"
+        className="bg-[#121212] border border-white/10 rounded-[32px] w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl"
       >
         {/* Header */}
-        <div className="p-8 border-b border-white/5 flex justify-between items-center bg-[#1A1A1A]">
+        <div className="p-6 md:p-8 border-b border-white/5 flex justify-between items-center bg-[#1A1A1A] shrink-0">
           <div>
             <h3 className="text-xl font-black text-white tracking-tight">
               {isSuccess ? 'Candidatura Recebida' : 'Candidatura de Distribuidor'}
@@ -575,7 +575,7 @@ Quero comprar com condições exclusivas!`;
 
         {/* Progress Bar */}
         {!isSuccess && (
-          <div className="h-1 bg-white/5 w-full">
+          <div className="h-1 bg-white/5 w-full shrink-0">
             <motion.div 
               className="h-full bg-[#F4CDD4] shadow-[0_0_10px_rgba(244,205,212,0.5)]"
               initial={{ width: '0%' }}
@@ -584,7 +584,7 @@ Quero comprar com condições exclusivas!`;
           </div>
         )}
 
-        <div id="form-distribuidor" className="p-8 md:p-12">
+        <div id="form-distribuidor" className="p-6 md:p-10 overflow-y-auto">
           <AnimatePresence mode="wait">
             {isSuccess ? (
               <motion.div
@@ -831,22 +831,20 @@ Quero comprar com condições exclusivas!`;
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -20, opacity: 0 }}
-                className="space-y-6"
+                className="space-y-5"
               >
-                <h4 className="text-xl font-black text-white mb-8 tracking-tight">Modelo de Negócio</h4>
-                <div className="space-y-6">
+                <h4 className="text-xl font-black text-white mb-4 tracking-tight">Modelo de Negócio</h4>
+                <div className="space-y-4">
                   <div>
-                    <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-4 block">Como você atua hoje?</label>
+                    <label className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-3 block">Como você atua hoje?</label>
                     <div className="grid grid-cols-1 gap-2">
                       {[
-                        { id: 'fisico', label: 'Distribuição Física' },
-                        { id: 'ecommerce', label: 'E-commerce' },
-                        { id: 'ambos', label: 'Ambos (Físico e E-commerce)' }
+                        { id: 'fisico', label: 'Distribuição Física' }
                       ].map(opt => (
                         <button 
                           key={opt.id}
                           onClick={() => setFormData({...formData, businessModel: opt.label})}
-                          className={`py-4 px-6 rounded-xl border text-left font-bold uppercase tracking-widest text-[10px] transition-all flex items-center justify-between ${formData.businessModel === opt.label ? 'bg-[#F4CDD4] text-[#080808] border-[#F4CDD4]' : 'bg-white/5 text-white border-white/10 hover:border-white/30'}`}
+                          className={`py-3.5 px-6 rounded-xl border text-left font-bold uppercase tracking-widest text-[10px] transition-all flex items-center justify-between ${formData.businessModel === opt.label ? 'bg-[#F4CDD4] text-[#080808] border-[#F4CDD4]' : 'bg-white/5 text-white border-white/10 hover:border-white/30'}`}
                         >
                           {opt.label}
                           {formData.businessModel === opt.label && <CheckCircle size={16} />}
@@ -859,17 +857,17 @@ Quero comprar com condições exclusivas!`;
                     <input 
                       type="text" 
                       placeholder="Ex: Marca X, Marca Y ou Não trabalho"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white focus:border-[#F4CDD4] outline-none transition-colors"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-3.5 text-white focus:border-[#F4CDD4] outline-none transition-colors"
                       value={formData.previousBrands}
                       onChange={e => setFormData({...formData, previousBrands: e.target.value})}
                     />
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <button onClick={handlePrev} className="flex-1 bg-white/5 text-white py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors">Voltar</button>
+                  <button onClick={handlePrev} className="flex-1 bg-white/5 text-white py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors">Voltar</button>
                   <button 
                     onClick={handleNext}
-                    className="flex-[2] bg-[#F4CDD4] text-[#080808] py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 group"
+                    className="flex-[2] bg-[#F4CDD4] text-[#080808] py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 group"
                   >
                     Próxima Etapa <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                   </button>

@@ -577,9 +577,9 @@ Quero comprar com condições exclusivas da feira!`;
       <motion.div 
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-[#121212] border border-white/10 rounded-[32px] w-full max-w-2xl overflow-hidden shadow-2xl"
+        className="bg-[#121212] border border-white/10 rounded-[32px] w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl"
       >
-        <div className="p-8 border-b border-white/5 flex justify-between items-center bg-[#1A1A1A]">
+        <div className="p-6 md:p-8 border-b border-white/5 flex justify-between items-center bg-[#1A1A1A] shrink-0">
           <div>
             <h3 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
               <span>{isSuccess ? 'Agendamento Recebido' : 'Agendar Reunião - PET South America'}</span>
@@ -594,7 +594,7 @@ Quero comprar com condições exclusivas da feira!`;
         </div>
 
         {!isSuccess && (
-          <div className="h-1 bg-white/5 w-full">
+          <div className="h-1 bg-white/5 w-full shrink-0">
             <motion.div 
               className="h-full bg-gradient-to-r from-[#F4CDD4] via-[#FDE8ED] to-[#F4CDD4]"
               initial={{ width: '0%' }}
@@ -603,7 +603,7 @@ Quero comprar com condições exclusivas da feira!`;
           </div>
         )}
 
-        <div id="form-distribuidor-petsouth" className="p-8 md:p-12">
+        <div id="form-distribuidor-petsouth" className="p-6 md:p-10 overflow-y-auto">
           <AnimatePresence mode="wait">
             {isSuccess ? (
               <motion.div
